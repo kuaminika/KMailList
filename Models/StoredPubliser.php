@@ -1,10 +1,11 @@
 <?php
- require_once "./interfaces/IPublisher.php";
 
- use models\interfaces\IPublisher;
-
-
- class StoredPublisher implements IPublisher
+namespace models
+{
+    require_once "interfaces/IPublisher.php";
+    require_once "AModel.php";
+    use models\interfaces\IPublisher;
+ class StoredPublisher extends AModel implements IPublisher 
  {
     private $name;
     private $email;
@@ -12,10 +13,13 @@
     private $publisherId;
 
 
-    public function __construct()
-    {
+    public function __construct($raw)
+    {     
        
-          
+          $this->id = $raw["user_id"];
+          $this->name = $raw["name"];
+          $this->email =$raw["email"];
+          $this->publisherId = $raw["publisherId"];
        
     }
 
@@ -37,5 +41,5 @@
     }
  }
 
-
+}
 ?>

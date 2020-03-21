@@ -4,17 +4,15 @@ namespace Repository{
 
     require_once "./ARepository.php";
     require_once "./interfaces/IPublisherRepository.php";
-    require_once "../Models/StoredPubliser.php";
+    require_once "../Models/StoredMessage.php";
+    require_once "../Models/FormedOutMessage.php";
     require_once "../Models/ModelList.php";
- //   require_once "../Models/interfaces/IModel.php";
 
-
-  //  use models\interfaces\IModel;
     use models\ModelList;
-    use models\StoredPublisher;
+    use models\StoredMessage;
     use Repository\interfaces\IPublisherReposiory;
 
-    class PublisherRepository extends ARepository implements IPublisherReposiory
+    class MessageRepository extends ARepository implements IPublisherReposiory
     {
      
 
@@ -28,7 +26,7 @@ namespace Repository{
             $this->_queryBoard["findAllQuery"] = "SELECT u.name 
                                                        , u.email 
                                                        , p.id as publisherId 
-                                                       , u.id as user_id
+                                                       , u.id 
                                                     FROM `".$usersTableName."` u 
                                                     INNER JOIN ".$publishersTableName." p on u.id = p.user_id";
 
@@ -41,29 +39,18 @@ namespace Repository{
 
         }
 
-        public function insert( $newIModel ){}
+        public function insert(StoredMessage $newIModel )
+        {
+
+
+
+
+        }
         public function delete($id){}
         public function update($iModel){}
         public function findAll(){
 
-            $findAllQuery = $this->_queryBoard["findAllQuery"];
-
-            $dbResultSet =  $this->dbTool->runQuery( $findAllQuery)->fetchAll();
-            
-            $this->logTool->log("about to do fetching");
-            $this->logTool->log($findAllQuery);
-
-            $result =  new ModelList();
-            for ($i=0; $i <sizeOf($dbResultSet) ; $i++)
-            { 
-               $currentRow =  $dbResultSet[$i];
-               $result->add( new StoredPublisher($currentRow));
-            }         
-         
-            $this->logTool->log($result->_toJson());
-            
-            return $result;
-
+       
         }
 
     }

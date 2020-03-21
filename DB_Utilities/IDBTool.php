@@ -4,6 +4,7 @@ namespace DB_Utilities{
 
  interface IDBTool{
 
+ 
     public function connectToDB();
     public function runQuery($query);
     public function tableExists($tableName);

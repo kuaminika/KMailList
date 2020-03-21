@@ -15,9 +15,9 @@ require_once "../DB_Utilities/MYSQL_DBTool.php";
 require_once "../KConfigSet.php";
 
 $servername = "localhost";
- $username = "datauser";
- $password= "data100";
- $dbname = "K_mail_list";            
+$username = "datauser";
+$password= "data100";
+$dbname = "K_mail_list";            
 
 $dbTool = new  DB_Utilities\MYSQL_DBTool($servername, $username, $password, $dbname);
 $logTool_main = new Log_Utilities\EchoLogTool("logTool_main");

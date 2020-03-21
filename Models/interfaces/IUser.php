@@ -1,6 +1,8 @@
 <?php
 
 namespace models\interfaces{
+
+    require_once "IModel.php";
     interface IUser extends IModel
     {
      
