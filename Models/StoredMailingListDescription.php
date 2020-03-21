@@ -19,6 +19,9 @@ namespace models
           $this->id = $raw["mailingList_id"];
           $this->name = $raw["name"];
           $this->owner_id =  $raw["owner_id"];
+          $raw["name"]= $raw["owner_name"];
+          $raw["email"]= $raw["owner_email"];
+          $raw["publisherId"] = $this->owner_id;
           $this->owner = new StoredPublisher($raw);       
     }
     

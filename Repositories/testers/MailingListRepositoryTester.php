@@ -74,10 +74,12 @@ namespace Repository\Testers{
 
 
             $specimen = new FormedOutMailingListDescription($rawFormMailingListDescription);
-
+            $logTool->log("<b>before:</b>");
+            $repo->findAll();
              $repo->insert($specimen);
 
-
+             $logTool->log("<b>after:</b>");
+             $repo->findAll();
 
 
         }
