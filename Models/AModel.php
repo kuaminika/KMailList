@@ -48,15 +48,31 @@ abstract class AModel{
             foreach ($properties as $prop) 
             {
                  $name =  $prop->getName();
-               $object->$name = $this->$name;
+                $valueIsPrimitive = is_scalar( $this->$name);
+                $object->$name = $this->$name;
+                
+                if($valueIsPrimitive) continue;
+                $object_lvl2 =  new \StdClass();
+                $object_lvl2->_class      = get_class($this);
+
+                $innerProps = $this->getProperties($object->$name);
+                foreach($innerProps as $innerProp)
+                {
+                    $innerName = $innerProp->getName();
+                   $object_lvl2-> $innerName  =   $object->$name->$innerName;  
+
+                }
+                $object->$name =   $object_lvl2;
+                   //  method_exists( $this->$name, '_toJson') ? $object->_toJson() : json_encode($object);
             }
             return json_encode($object);
         }
 
-        public function getProperties()
+        public function getProperties($obj= null)
         {
-                    
-            $reflect = new \ReflectionClass($this);
+            if(!$obj)
+              $obj = $this;       
+            $reflect = new \ReflectionClass($obj);
             $props   = $reflect->getProperties();
             return $props;
         }
