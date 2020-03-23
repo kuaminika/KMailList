@@ -4,7 +4,7 @@
 $dbSetUpConfigs = array(
     "servername"=>"localhost"
     ,"username"=>"datauser"
-    ,"password"=>"data100"
+    ,"password"=>"****"
     ,"dbname"=>"K_mail_list"
 );        
 
