@@ -46,7 +46,7 @@ require_once "IDBTool.php";
                     }		
                     
                     $this->connection->set_charset($charset);
-                    echo "Connected successfully";
+                  //  echo "Connected successfully";
              }
 
              public function fetchAll($callback = null)

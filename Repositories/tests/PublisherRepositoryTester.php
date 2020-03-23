@@ -1,6 +1,6 @@
 <?php
 
-namespace Repository\Testers
+namespace Repository\Tests
 {
    
     require_once "requireCommon.php";
@@ -14,30 +14,6 @@ namespace Repository\Testers
         {
             echo "<h1>PublisherRepository tests </h1>";
             
-        }
-
-        private function getLogTool($stringLogType)
-        {
-
-            $logTypeFn = ["echo"=>function()
-                                {
-
-                                    $logTool  = new \Log_Utilities\EchoLogTool("logTool_main");
-                                    return $logTool;
-                                },
-                        "db"=>function($dbTool,$settings)
-                        {
-                            $params = array(
-                                "name"=>"REPOSIROTY TESTER",
-                               "dbTool"=>$dbTool,
-                               "logTableName"=>$settings[ "logToolTableName"]
-                            ); 
-                            $logTool = new \Log_Utilities\DBTableLogTool($params);
-                            return $logTool;
-                        }
-                    ];
-            return $logTypeFn[$stringLogType];
-
         }
 
 
@@ -56,10 +32,18 @@ namespace Repository\Testers
             $settings = $globalSettings;
             $dbTool =  new \DB_Utilities\MYSQL_DBTool($servername,$username,$password,$dbname);
            
-            $logTool  = $this->getLogTool("echo")();
+           // $logTool  = $this->getLogTool("echo")();
+
+           $logTool  = \Log_Utilities\LogToolCreator::getCreateLogFn("echo")();//$this->getLogTool("echo")();
+
             $logTool->log("hihi im here :)");
             $configs =  \KConfigSet::createNewConfigs($settings );
-            $toolBox = new \Repository\RepositoryToolBox($dbTool,$configs,$logTool);
+            $params = [];
+            $params["dbTool"]=$dbTool;
+            $params["configSet"]=$configs;
+            $params["logTool"]=$logTool;
+
+            $toolBox = new \Repository\RepositoryToolBox($params);//$dbTool,$configs,$logTool);
             
             $toolBox->dbTool->connectToDB();
             $publisherRepo = new  \Repository\PublisherRepository($toolBox);

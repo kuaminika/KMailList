@@ -2,10 +2,10 @@
 
 namespace Repository{
 
-    require_once "./ARepository.php";
-    require_once "./interfaces/IPublisherRepository.php";
-    require_once "../Models/StoredPubliser.php";
-    require_once "../Models/ModelList.php";
+    require_once dirname(__FILE__)."/"."ARepository.php";
+    require_once dirname(__FILE__)."/"."interfaces/IPublisherRepository.php";
+    require_once dirname(__FILE__)."/"."../Models/StoredPubliser.php";
+    require_once dirname(__FILE__)."/"."../Models/ModelList.php";
  //   require_once "../Models/interfaces/IModel.php";
 
 
@@ -21,7 +21,6 @@ namespace Repository{
         public function __construct($toolBox) 
         {
             parent::__construct($toolBox);
-            print "In SubClass constructor\n";
             $usersTableName = $this->configSet->getConfig("usersTableName");
             $publishersTableName = $this->configSet->getConfig("publishersTableName");
         

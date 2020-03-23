@@ -7,6 +7,7 @@ namespace Log_Utilities
          public function log($str);
          public function logWithTab($str);
          public function showObj($obj);
+      //   public function setTestMode($testModeIsOn);
 
     }
 }

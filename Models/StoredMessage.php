@@ -1,7 +1,7 @@
 <?php
 
-namespace models
-{
+namespace models;
+
     require_once "interfaces/IMessage.php";
     require_once "AModel.php";
 
@@ -10,22 +10,26 @@ namespace models
  {
      
     private $id; 
+    private $authorId;
+    private $authorName;
+    private $authorEmail;
     private $title;
-    private $author;
     private $content;
     private $lastUpdateDate;
     private $dateSent;
     private $listId;
 
-
     public function __construct($raw)
     {           
           $this->id = $raw["message_id"];
+          $this->authorId = $raw["author_id"];
+          $this->authorName = $raw["author_name"];
+          $this->authorEmail = $raw["author_email"];
           $this-> title= $raw["title"];
-          $this-> author =  $raw["author"];
           $this-> content = $raw["content"];
-          $this-> lastUpdateDate = $raw["lastUpdateDate"];
-          $this->listId =$raw["listId"];   
+          $this-> lastUpdateDate = $raw["last_update_date"];
+          $this->dateSent = $raw["sent_date"];
+          $this->listId =$raw["list_id"];   
     }
 
 
@@ -113,29 +117,6 @@ namespace models
       }
 
 
-
-
-
-      /**
-       * Get the value of author
-       */
-      public function getAuthor()
-      {
-         return $this->author;
-      }
-
-      /**
-       * Set the value of author
-       *
-       * @return  self
-       */
-      public function setAuthor($author)
-      {
-         $this->author = $author;
-
-         return $this;
-      }
-
       /**
        * Get the value of content
        */
@@ -180,7 +161,69 @@ namespace models
     }
 
 
+
+    
+    /**
+     * Get the value of authorId
+     */ 
+    public function getAuthorId()
+    {
+        return $this->authorId;
+    }
+
+    /**
+     * Set the value of authorId
+     *
+     * @return  self
+     */ 
+    public function setAuthorId($authorId)
+    {
+        $this->authorId = $authorId;
+
+        return $this;
+    }
+
+
+    /**
+     * Get the value of authorName
+     */ 
+    public function getAuthorName()
+    {
+        return $this->authorName;
+    }
+
+    /**
+     * Set the value of authorName
+     *
+     * @return  self
+     */ 
+    public function setAuthorName($authorName)
+    {
+        $this->authorName = $authorName;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of authorEmail
+     */ 
+    public function getAuthorEmail()
+    {
+        return $this->authorEmail;
+    }
+
+    /**
+     * Set the value of authorEmail
+     *
+     * @return  self
+     */ 
+    public function setAuthorEmail($authorEmail)
+    {
+        $this->authorEmail = $authorEmail;
+
+        return $this;
+    }
    }
 
- }
+
 ?>

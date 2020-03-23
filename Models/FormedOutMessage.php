@@ -2,8 +2,8 @@
 
 namespace models
 {
-    require_once "interfaces/IMessage.php.php";
-    require_once "AModel.php";
+    require_once dirname(__FILE__). "/interfaces/IMessage.php";
+    require_once dirname(__FILE__). "/AModel.php";
     use models\interfaces\IMessage;
  class FormedOutMessage extends AModel implements IMessage 
  {     
@@ -12,6 +12,7 @@ namespace models
     private $author;
     private $content;
     private $lastUpdateDate;
+   
 
     public function __construct($raw)
     {     
@@ -21,6 +22,12 @@ namespace models
           $this-> content = $raw["content"];
           $this-> lastUpdateDate = $raw["lastUpdateDate"];
     }
+
+
+      public function getDateSent()
+      {
+         return   new \DateTime();
+      }
 
       /**
        * Get the value of lastUpdateDate

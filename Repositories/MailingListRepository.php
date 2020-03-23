@@ -2,38 +2,21 @@
 
 namespace Repository{
 
-    require_once "./ARepository.php";
-    require_once "./interfaces/IMailingListRepository.php";
-   require_once "../Models/interfaces/IModel.php";
-    require_once "../Models/interfaces/IMailingList.php";
-    require_once "../Models/ModelList.php";
-    require_once "../Models/StoredMailingListDescription.php";
+    require_once dirname(__FILE__)."/"."ARepository.php";
+    require_once dirname(__FILE__)."/"."interfaces/IRepository.php";
+    require_once dirname(__FILE__)."/"."../Models/StoredMailingListDescription.php";
+    require_once dirname(__FILE__)."/"."../Models/ModelList.php";
+    //use Repository\interfaces\IMailingListRepository;
+    use Repository\interfaces\IRepository;
 
-    use models\ModelList;
-    use models\StoredMalingListDescription;
-    use Repository\interfaces\IMailingListRepository;
-
-    class MailingListRepository extends ARepository implements IMailingListRepository
+    class MailingListRepository extends ARepository implements IRepository// IMailingListRepository
     {
      
 
         public function __construct($toolBox) 
         {
             parent::__construct($toolBox);
-            print "In SubClass constructor\n";
-
-
-            /*  $globalSettings = array(
-                 "usersTableName" =>"User",
-                "publishersTableName"=>"Publisher",
-                "messagesTableName"=>"Message",
-                "listsTableName"=>"MailingList",
-                "subscribersListTableName"=>"SubscriberList",
-                "subscribersTableName"=>"Subscriber",
-                "logToolTableName"=>"Log"
-            );
-             * 
-             */
+           
             $listsTableName = $this->configSet->getConfig("listsTableName");
             $publishersTableName = $this->configSet->getConfig("publishersTableName");
             $usersTableName = $this->configSet->getConfig("usersTableName");
@@ -59,40 +42,19 @@ namespace Repository{
         }
 
         public function insert( $newIModel )
-        {
-
+        { 
             $ml =  $newIModel;
             $ownerId= $ml->getOwner()->id;
             $name = $ml->getName();
-            $query =  sprintf($this->_queryBoard["insertQuery"], $ownerId,$name); 
-
-            $this->logTool->log("about to trun queyr:");
-            $this->logTool->log($query);
-            $this->dbTool->runQuery($query);
+            $args = [$ownerId,$name];
+            $this->_insert($args );
         }
         public function delete($id){}
         public function update($iModel){}
-        public function findAll(){
-            
-           
-            $findAllQuery = $this->_queryBoard["findAllQuery"];
-
-            $dbResultSet =  $this->dbTool->runQuery( $findAllQuery)->fetchAll();
-            
-            $this->logTool->log("about to do fetching");
-            $this->logTool->log($findAllQuery);
-
-            $result =  new ModelList();
-            for ($i=0; $i <sizeOf($dbResultSet) ; $i++)
-            { 
-               $currentRow =  $dbResultSet[$i];
-               $result->add( new StoredMalingListDescription($currentRow));
-            }         
-         
-            $this->logTool->log($result->_toJson());
-            
-            return $result;
-       
+        public function findAll()
+        {           
+           $result =  $this->_findAll("models\StoredMalingListDescription");
+           return $result;           
         }
 
     }

@@ -2,8 +2,8 @@
 
 namespace Repository{
 
-    require_once "./ARepository.php";
-    require_once "./interfaces/IPublisherRepository.php";
+    require_once "ARepository.php";
+    require_once "interfaces/IPublisherRepository.php";
     require_once "../Models/StoredMessage.php";
     require_once "../Models/FormedOutMessage.php";
     require_once "../Models/ModelList.php";
@@ -14,21 +14,25 @@ namespace Repository{
 
     class MessageRepository extends ARepository implements IPublisherReposiory
     {
-     
-
         public function __construct($toolBox) 
         {
             parent::__construct($toolBox);
-            print "In SubClass constructor\n";
             $usersTableName = $this->configSet->getConfig("usersTableName");
-            $publishersTableName = $this->configSet->getConfig("publishersTableName");
-        
-            $this->_queryBoard["findAllQuery"] = "SELECT u.name 
-                                                       , u.email 
-                                                       , p.id as publisherId 
-                                                       , u.id 
+           // $listsTableName = $this->configSet->getConfig("listsTableName");           
+            $messagesTableName = $this->configSet->getConfig("messagesTableName");
+
+            $this->_queryBoard["findAllQuery"] = "SELECT u.name     as author_name
+                                                       , u.email    as author_email 
+                                                       , u.id       as author_id
+                                                       , m.id       as message_id 
+                                                       , m.title    as title
+                                                       , m.content  as content
+                                                       , m.last_update_date 
+                                                       , m.list_id  
+                                                       , m.sent_date
                                                     FROM `".$usersTableName."` u 
-                                                    INNER JOIN ".$publishersTableName." p on u.id = p.user_id";
+                                                    INNER JOIN ".$messagesTableName." m on u.id = m.author_id";
+                                                  //  INNER JOIN ".$listsTableName." ml on ml.id = ml.list_id ";
 
         }
 
@@ -39,7 +43,7 @@ namespace Repository{
 
         }
 
-        public function insert(StoredMessage $newIModel )
+        public function insert( $newIModel )
         {
 
 
@@ -50,6 +54,8 @@ namespace Repository{
         public function update($iModel){}
         public function findAll(){
 
+            $result =  $this->_findAll("models\StoredMessage");
+            return $result;       
        
         }
 

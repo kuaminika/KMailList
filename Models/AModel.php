@@ -52,6 +52,8 @@ abstract class AModel{
                 $object->$name = $this->$name;
                 
                 if($valueIsPrimitive) continue;
+                if(!$this->$name)  continue;
+
                 $object_lvl2 =  new \StdClass();
                 $object_lvl2->_class      = get_class($this);
 
