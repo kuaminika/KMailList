@@ -1,6 +1,6 @@
 <?php
 
-
+//todo: move to K_Utilities
 class KConfigSet{
     private $configSetArray;
 
@@ -15,7 +15,7 @@ class KConfigSet{
 
     public static function getCurrentConfigs()
     {
-        $result = self::$currentConfigs;
+        $result = isset( self::$currentConfigs)? self::$currentConfigs: new KConfigSet([]);
         return $result;
     }
 
@@ -29,6 +29,16 @@ class KConfigSet{
     {
         $result = array_key_exists($configName,$this->configSetArray);
         return $result;
+    }
+
+    public function setConfig($newConfigName,$value)
+    {
+        $this->configSetArray[$newConfigName]=$value;
+    }
+
+    public function addConfig($newConfigName,$value)
+    {
+        $this->configSetArray[$newConfigName]=$value;
     }
 
     public function getConfig( $configName)
