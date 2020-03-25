@@ -22,6 +22,7 @@ class KIgniter
         $dbTool =  new \DB_Utilities\MYSQL_DBTool($servername,$username,$password,$dbname);
     
         $dbTool->connectToDB();
+     //   $logTool  = \Log_Utilities\LogToolCreator::getCreateLogFn("echo")();//($dbTool,$settings);
         $logTool  = \Log_Utilities\LogToolCreator::getCreateLogFn("db")($dbTool,$settings);
 
         $logTool->log("hihi im here :)");

@@ -17,17 +17,31 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = explode( '/', $uri );
 
-$request = $_REQUEST;
 
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 
 \K_Utilities\KIgniter::Ignite();
 
-if(!$request["context"])
+
+
+$request =$_REQUEST;
+
+
+
+if( !array_key_exists("context",$request))
 {
     header("HTTP/1.1 404 Not Found");
+    echo "context missing";
     exit();
 }
+$requestParams = $request;
+if($requestMethod == "POST")
+{
+    $requestParams = $_POST;
+}
+unset($requestParams["context"]);
+unset($requestParams["requestAction"]);
+
 $controllerName ="\\Controllers\\". $request["context"]."sController";
 $controllerExists = class_exists($controllerName);
 if(!$controllerExists)
@@ -43,7 +57,8 @@ if(!$controllerExists)
 $createControllerParams = array("context"       =>$request["context"]
                                 ,"configs"      =>\KConfigSet::getCurrentConfigs()
                                 ,"requestAction"=>$request["requestAction"]
-                                ,"requestParams" => array());
+                                ,"requestParams" =>$requestParams
+                                ,"requestMethod" =>$requestMethod);
 $contrrolerToolBox = \Controllers\ControllerToolBox::createNew($createControllerParams );
 $controller = new $controllerName($contrrolerToolBox);
 

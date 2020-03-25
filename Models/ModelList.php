@@ -19,6 +19,11 @@ class ModelList
     }
 
 
+    public function getContents()
+    {
+        return $this->innerArr;
+    }
+
     public function _toJson()
     {
         $result="[";

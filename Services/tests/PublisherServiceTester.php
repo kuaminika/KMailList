@@ -23,7 +23,11 @@ class PublisherServiceTester
         
         $serviceToolBox = \Service\ServiceToolBox::createToolBox("Publisher");
         $publisherService = new \Service\PublisherService($serviceToolBox );
-        $publisherService->findAll();
+       $reslt = $publisherService->findAll();
+       //var_dump($reslt->getContents());
+        $list = $reslt->getContents();
+
+        $this->toolBox->showListResults($list);
 
     }
 

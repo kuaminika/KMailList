@@ -1,11 +1,14 @@
 <?php
 
-namespace models\interfaces {
-interface ISubscriber extends IUser{
+namespace models\interfaces
+{
 
-    public function getDateAdded();
-    public function gedAddedBy();
 
- }
+    interface ISubscriber extends IUser{
+
+        public function getDateAdded();
+        public function getAddedBy();
+
+    }
 }
 ?>

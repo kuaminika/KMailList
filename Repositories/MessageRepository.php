@@ -2,17 +2,19 @@
 
 namespace Repository{
 
-    require_once "ARepository.php";
-    require_once "interfaces/IPublisherRepository.php";
-    require_once "../Models/StoredMessage.php";
-    require_once "../Models/FormedOutMessage.php";
-    require_once "../Models/ModelList.php";
+    require_once dirname(__FILE__)."/ARepository.php";
+    require_once dirname(__FILE__)."/interfaces/IMailingListRepository.php";
+    require_once dirname(__FILE__)."/../Models/StoredMessage.php";
+    require_once dirname(__FILE__)."/../Models/FormedOutMessage.php";
+    require_once dirname(__FILE__)."/../Models/ModelList.php";
 
-    use models\ModelList;
-    use models\StoredMessage;
-    use Repository\interfaces\IPublisherReposiory;
+    //require_once dirname(__FILE__)."/../Models/FormedOutMessage.php";
 
-    class MessageRepository extends ARepository implements IPublisherReposiory
+    //use models\ModelList;
+    //use models\StoredMessage;
+    use Repository\interfaces\IMailingListRepository;
+
+    class MessageRepository extends ARepository implements IMailingListRepository
     {
         public function __construct($toolBox) 
         {

@@ -2,7 +2,9 @@
 
 namespace Log_Utilities{
 
-    require_once "ILogTool.php";
+use Exception;
+
+require_once "ILogTool.php";
 
  class DBTableLogTool implements ILogTool 
  {
@@ -33,9 +35,18 @@ namespace Log_Utilities{
 
       private function writeInDB($str)
       {
-          $cmd = "INSERT INTO `".$this->logTableName."` (`id`, `LOG_CONTENT`, `LOG_DATE`) VALUES (NULL, '".$str."', CURRENT_TIMESTAMP);";
-          
+        $str = str_replace("'", "\'", $str);
+      
+        $cmd = "INSERT INTO `".$this->logTableName."` (`id`, `LOG_CONTENT`, `LOG_DATE`) VALUES (NULL, '".$str."', CURRENT_TIMESTAMP);";
+        try{
           $this->dbTool->runQuery($cmd);
+        }
+        catch(Exception $ex)
+        {
+            echo "cmd:".$cmd;
+            echo "</br>";
+            echo $ex->getMessage();
+        }
      
         }
 

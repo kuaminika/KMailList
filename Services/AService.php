@@ -16,17 +16,14 @@ namespace Service{
             $this->logTool = $serviceToolBox->logTool;
             $this->configSet = $serviceToolBox->configSet;
         }
-
-         
+                 
         public function insert( $formedOutModel )
         {
             $this->repository->insert($formedOutModel);
         }
         
         public function findAll()
-        {
-
-          
+        {          
           $result =   $this->repository->findAll();
           return $result;
         }

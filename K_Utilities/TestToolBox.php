@@ -19,7 +19,21 @@ class TestToolBox{
         echo "<h2>".$str."</h2>";        
     }
     
+    public function showListResults($list)
+    {
+        
+        ?>
+        <ul>
+        <?php
+        foreach ( $list  as $el) 
+        {?>
+         <li><?php echo $el->_toJson(); ?></li>
 
+        <?php
+        }?>
+        </ul>
+        <?php
+    }
 
     public function startConnection()
     {

@@ -19,25 +19,14 @@ namespace Repository\Tests
 
         public function TestPublisherRepositor_findAll()
         {
-            global $globalSettings,$dbSetUpConfigs; 
-
-            echo "<h2>test find all:</h2>";
-
-            $servername = $dbSetUpConfigs["servername"];
-            $username =  $dbSetUpConfigs["username"];
-            $password=  $dbSetUpConfigs["password"];
-            $dbname =  $dbSetUpConfigs["dbname"];         
-
-                        
-            $settings = $globalSettings;
-            $dbTool =  new \DB_Utilities\MYSQL_DBTool($servername,$username,$password,$dbname);
+            $configs =  \KConfigSet::getCurrentConfigs();
            
            // $logTool  = $this->getLogTool("echo")();
 
-           $logTool  = \Log_Utilities\LogToolCreator::getCreateLogFn("echo")();//$this->getLogTool("echo")();
-
+        //   $logTool  = \Log_Utilities\LogToolCreator::getCreateLogFn("echo")();//$this->getLogTool("echo")();
+            $logTool =$configs->logTool;
+            $dbTool = $configs->dbTool;
             $logTool->log("hihi im here :)");
-            $configs =  \KConfigSet::createNewConfigs($settings );
             $params = [];
             $params["dbTool"]=$dbTool;
             $params["configSet"]=$configs;

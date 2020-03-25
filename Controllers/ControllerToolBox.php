@@ -13,6 +13,7 @@ class ControllerToolBox
     private $logTool;
     private $requestAction;
     private $requestParams;
+    private $requestMethod;
 
     public function __construct($param)
     {
@@ -20,6 +21,7 @@ class ControllerToolBox
         $this->logTool = $param["logTool"];
         $this->requestAction = $param["requestAction"];
         $this->requestParams = $param["requestParams"];
+        $this->requestMethod = $param["requestMethod"];
     }
 
     private static function getBlankCreateParams()
@@ -27,7 +29,8 @@ class ControllerToolBox
         $result = array("context"      =>"NotFoundContext"
                        ,"configs"      =>\KConfigSet::getCurrentConfigs()
                        ,"requestAction"=>"NotFoundMethod"
-                       ,"requestParams" => array());
+                       ,"requestParams" => array()
+                       ,"requestMethod" =>"GET");
 
         return $result;
 
@@ -49,8 +52,9 @@ class ControllerToolBox
         $param = array(
              "logTool"       => $serviceToolBox->logTool
             ,"service"       => $service
-            ,"requestAction" => $createParams["requestAction"]
+            ,"requestAction" => isset($createParams["requestAction"]) ? $createParams["requestAction"]:"index"
             ,"requestParams" => $createParams["requestParams"]
+            ,"requestMethod"  => isset($createParams["requestMethod"]) ? $createParams["requestMethod"]:"GET"
         ); 
 
         $result = new ControllerToolBox($param);
@@ -88,6 +92,14 @@ class ControllerToolBox
     public function getRequestAction()
     {
         return $this->requestAction;
+    }
+
+    /**
+     * Get the value of requestMethod
+     */ 
+    public function getRequestMethod()
+    {
+        return $this->requestMethod;
     }
 }
 ?>

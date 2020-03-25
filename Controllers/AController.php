@@ -15,11 +15,20 @@ abstract class AController
       $this->service = $toolbox->getService();
       $this->logTool = $toolbox->getLogTool();
       $this->requestAction = $toolbox->getRequestAction();
+      $this->requestMethod = $toolbox->getRequestMethod();
       $this->params = $toolbox->getRequestParams();
       $this->response = ["status_code_header"=>"HTTP/1.1 200 OK",
                         "body"=>json_encode([])
                         ];
   
+    }
+
+
+    public function index()
+    {
+      $result = "index";
+      $this->response['status_code_header'] = 'HTTP/1.1 200 OK';
+      $this->response['body'] = $result;
     }
 
     public function findAll()
@@ -33,7 +42,9 @@ abstract class AController
     public function processRequest()
     {
         $params = $this->params;
-        call_user_func_array(array($this, $this->requestAction), $params);
+
+      
+        call_user_func_array(array($this, $this->requestAction), [$params]);
 
         header($this->response['status_code_header']);
         if ($this->response['body']) 

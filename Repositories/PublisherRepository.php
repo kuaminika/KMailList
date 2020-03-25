@@ -30,6 +30,12 @@ namespace Repository{
                                                        , u.id as user_id
                                                     FROM `".$usersTableName."` u 
                                                     INNER JOIN ".$publishersTableName." p on u.id = p.user_id";
+        
+            $this->_queryBoard["insertUserQuery"] = "INSERT INTO  `".$usersTableName."` (`name`, email) 
+                                                          VALUES ('%s','%s');";
+
+            $this->_queryBoard["insertUserQuery"] = "INSERT INTO  `".$usersTableName."` (`name`, email) 
+            VALUES ('%s','%s');";
 
         }
 
@@ -37,7 +43,7 @@ namespace Repository{
         public function findById($id)
         {
 
-
+            
         }
 
         public function insert( $newIModel ){}

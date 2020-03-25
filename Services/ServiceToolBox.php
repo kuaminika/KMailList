@@ -22,12 +22,12 @@ class ServiceToolBox{
     public static function createToolBox($context,$configs= null)
     { 
         // prerequisite:  igniter ran meaning that DB is already set up in configs
-
+        
+        $configs = isset($configs)? $configs: \KConfigSet::getCurrentConfigs(); 
         $repositoryClassName = "\\Repository\\".$context."Repository";
   
         $logTool  = $configs->getConfig("currentLogTool");//\Log_Utilities\LogToolCreator::getCreateLogFn("echo")();
         $logTool->log("hihi im here :)");
-        $configs = isset($configs)? $configs: \KConfigSet::getCurrentConfigs(); 
         $dbTool= $configs->getConfig("currentDbTool");
         $params = [];
         $params["dbTool"]=$dbTool;

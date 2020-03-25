@@ -21,7 +21,7 @@ namespace Repository{
             $publishersTableName = $this->configSet->getConfig("publishersTableName");
             $usersTableName = $this->configSet->getConfig("usersTableName");
  
-            $this->_queryBoard["insertQuery"] = "INSERT INTO `".$listsTableName."` (`owner_id`, `name`) VALUES ('%d', '%s')";
+            $this->_queryBoard["insertQuery"] = "INSERT INTO `".$listsTableName."` (`owner_id`, `name`) VALUES (%d, '%s')";
             $this->_queryBoard["findAllQuery"] = "SELECT ml.name                                                     
                                                         , u.email as owner_email
                                                         , p.id    as owner_id 

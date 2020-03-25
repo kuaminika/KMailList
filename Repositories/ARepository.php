@@ -17,7 +17,11 @@ namespace Repository
             $this->dbTool = $toolBox->dbTool;
             $this->configSet = $toolBox->configSet;// \KConfigSet::getCurrentConfigs();
             $this->_queryBoard = [];
+       
             $this->logTool = $toolBox->logTool;
+            $usersTableName = $this->configSet->getConfig("usersTableName");
+            $this->_queryBoard["selectUserByEmailQuery"] = "SELECT id from `".$usersTableName."` WHERE email = '%s'";
+            $this->_queryBoard["insertUserQuery"] = "INSERT INTO  `".$usersTableName."` ( `name`, email) values ('%s','%s');";
         }
 
 
@@ -26,8 +30,21 @@ namespace Repository
             $query = vsprintf($this->_queryBoard["insertQuery"],$insertArgs);
 
             $this->logTool->log("about to trun queyr:");
-            $this->logTool->log($query);
+            $this->logTool->log(json_encode($query));
             $this->dbTool->runQuery($query);
+        }
+
+
+        protected function _convertResultSetToStoredTypeList($storedModelType,$dbResultSet)
+        {
+
+            $result =  new ModelList();
+            for ($i=0; $i <sizeOf($dbResultSet) ; $i++)
+            { 
+               $currentRow =  $dbResultSet[$i];
+               $result->add( new $storedModelType($currentRow));
+            }      
+            return $result;   
         }
 
         protected function _findAll($storedModelType)
@@ -40,12 +57,7 @@ namespace Repository
             $this->logTool->log("about to do fetching");
             $this->logTool->log($findAllQuery);
 
-            $result =  new ModelList();
-            for ($i=0; $i <sizeOf($dbResultSet) ; $i++)
-            { 
-               $currentRow =  $dbResultSet[$i];
-               $result->add( new $storedModelType($currentRow));
-            }         
+            $result =  $this->_convertResultSetToStoredTypeList($storedModelType, $dbResultSet);      
             $this->logTool->showObj(  $result);
             
             $this->logTool->log($result->_toJson());

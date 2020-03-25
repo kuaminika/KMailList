@@ -16,6 +16,7 @@ require_once "IDBTool.php";
             private $queryStatement;
             private $queryObjectOpened = FALSE;
             private $queryCount =0;
+            private $insertId;
              public function __construct($servername, $username, $password, $dbname)
              {
                  $this->servername = $servername;
@@ -87,6 +88,8 @@ require_once "IDBTool.php";
                 if(!$this->queryStatement) throw new Exception('Unable to prepare MySQL statement (check your syntax) - ' . $this->connection->error);    
 
                 $this->queryStatement->execute();
+                $this->insertId = $this->connection->insert_id;
+
                 if ($this->queryStatement->errno)
                 {
                     throw new Exception('Unable to prepare MySQL statement (check your syntax) - ' . $this->queryStatement->error);    
@@ -98,6 +101,13 @@ require_once "IDBTool.php";
                  $this->queryCount++;
 
                 return $this;
+             }
+
+
+             public function convertDate($date)
+             {
+                 $d = $date;
+               return $d->format('Y-m-d H:i:s');
              }
 
              public function fetchArray() {
@@ -148,7 +158,18 @@ require_once "IDBTool.php";
                 $this->runQuery($addFKCmd);
 
              }
+
+
+             /**
+             * Get the value of insertId
+             */ 
+            public function getInsertId()
+            {
+                return $this->insertId;
+            }
         }
+
+            
     }
 
 ?>
