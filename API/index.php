@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once dirname(__FILE__)."/../K_Utilities/KIgniter.php";
-require_once dirname(__FILE__)."/../Controllers/requireAll.php";
+require_once dirname(__FILE__)."/../Controllers/_requireAll.php";
 
 
 //inspired from : https://developer.okta.com/blog/2019/03/08/simple-rest-api-php
@@ -31,8 +31,10 @@ $request =$_REQUEST;
 if( !array_key_exists("context",$request))
 {
     header("HTTP/1.1 404 Not Found");
-    echo "context missing";
-    exit();
+   // echo "context missing";
+    
+   echo json_encode( $_SERVER);
+   exit();
 }
 $requestParams = $request;
 if($requestMethod == "POST")

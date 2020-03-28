@@ -21,6 +21,7 @@ class SubscriberRepository extends ARepository implements IRepository
         $usersTableName = $this->configSet->getConfig("usersTableName");
         $subscribersTableName = $this->configSet->getConfig("subscribersTableName");
         $listMemebersTable =$this->configSet->getConfig("subscribersListTableName");
+        $listsTableName = $this->configSet->getConfig("listsTableName");
     
         //generic query to define
         $this->_queryBoard["findAllQuery"] = "SELECT u.name 
@@ -40,7 +41,20 @@ class SubscriberRepository extends ARepository implements IRepository
 
         $this->_queryBoard["insertSubscriberToList"] = "INSERT INTO ". $listMemebersTable." (subscriber_id,list_id) values (%d,%d);"; 
 
-        $this->_queryBoard["selectSubscribersForList"] =  $this->_queryBoard["findAllQuery"]. " INNER JOIN ". $listMemebersTable." m on m.subscriber_id = s.id";
+        $this->_queryBoard["selectSubscribersForList"] =   "SELECT u.name 
+                                                                , u.email 
+                                                                , l.name as list_name
+                                                                , l.id as list_id
+                                                                , s.id as id 
+                                                                , u.id as user_id
+                                                                , s.date_subscribed
+                                                                , s.added_by_id
+                                                                , addor.name added_by
+                                                          FROM `".$usersTableName."` u 
+                                                          INNER JOIN `".$subscribersTableName."` s on u.id = s.user_id
+                                                          INNER JOIN `".$usersTableName."` addor on addor.id = s.added_by_id 
+                                                          INNER JOIN `". $listMemebersTable."` m on m.subscriber_id = s.id
+                                                          INNER JOIN `".$listsTableName."` l on l.id = m.list_id ";
 
     }
 
@@ -59,12 +73,30 @@ class SubscriberRepository extends ARepository implements IRepository
     {
 
         $subscriberId = $storedSubscriber->getSubscriberId();
+        try{
+      //  $subscriberId = $storedSubscriber->getSubscriberId();
         $insertQuery = sprintf($this->_queryBoard["insertSubscriberToList"],$subscriberId,$listId);
         $this->dbTool->runQuery($insertQuery);
 
        $dbResultSet =  $this->dbTool->runQuery($this->_queryBoard["selectSubscribersForList"])->fetchAll();
        $result =  $this->_convertResultSetToStoredTypeList("models\StoredSubscriber",$dbResultSet);
        return $result;
+        }
+        catch(Exception $ex)
+        {
+            
+           $ducplicateError = sprintf("Duplicate entry '%s' for key 'unique_list_subscriber'",$subscriberId."-".$listId);
+           $itsDublicate =  strpos($ex->getMessage(), $ducplicateError) ;
+
+            if($itsDublicate)
+            {
+                $location = $this->getFunctionAddress("addSubscriberToList");
+                $this->logAndThrow("alreadyExists",$location);
+            }
+
+           echo $itsDublicate ? "its duplicate":"0";
+           echo $ex->getMessage();
+        }
     }
 
     public function getOrInsert($formedOUtModel)
@@ -86,6 +118,18 @@ class SubscriberRepository extends ARepository implements IRepository
         $storedSubscriber = new StoredSubscriber($arrUserResult);
 
         return $storedSubscriber;
+    }
+
+
+    
+    public function subscriberExistsInList(FormedOutSubscriber $subscriberFromForm)
+    {
+        $query =  $this->_queryBoard["selectSubscribersForList"] ;
+
+        $dbRow =  $this->dbTool->runQuery($query)->fetchArray(); 
+
+        $found = new \models\StoredSubscriber($dbRow);
+         return  $found ;
     }
 
 

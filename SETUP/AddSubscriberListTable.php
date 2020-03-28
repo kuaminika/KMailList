@@ -39,6 +39,7 @@ namespace SETUP{
             $this->dbTool->validateFKIsPossible($fk2HostTableName,$tableName);
 
             $createUsersTblQuery = "CREATE TABLE `". $tableName."` (
+                `id` int(10) NOT NULL,
               `subscriber_id` int(10) NOT NULL,
               `list_id` int(10) NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -47,6 +48,9 @@ namespace SETUP{
           
             
             $this->dbTool->runQuery($createUsersTblQuery);
+            $this->dbTool->runQuery("ALTER TABLE `". $tableName."` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;");
+
+            $this->dbTool->runQuery("ALTER TABLE `". $tableName."` ADD UNIQUE( `unique_list_subscriber`, `list_id`);");
 
             $this->dbTool->fkBuildFKCommand($fk2HostTableName,$tableName,"subscriber_id","id");
 

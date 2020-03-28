@@ -2,7 +2,10 @@
 namespace Controllers;
 
 require_once dirname(__FILE__)."/ControllerToolBox.php";
-
+require_once dirname(__FILE__)."/../Models/KError.php";
+require_once dirname(__FILE__)."/../K_Utilities/KErrorCodeMap.php";
+use K_Utilities\KErrorCodeMap;
+use models\KError;
 abstract class AController
 {
     protected $service;
@@ -39,6 +42,19 @@ abstract class AController
     }
 
 
+    protected function logAndSend($errorCode,$location,$errorMessage=null)
+    {
+        $location = get_class($this).$location;
+        $errorMessage = isset($errorMessage)? $errorMessage : KErrorCodeMap::errorCodeDescription($errorCode);
+        $error = new KError($errorMessage,$location,$errorCode);
+      
+        $this->logTool->log($error->_toJson());
+
+        $this->response['status_code_header'] = 'HTTP/1.1 500 ERROR';
+        $this->response['body'] = $error->_toJson();
+
+
+    }
     public function processRequest()
     {
         $params = $this->params;

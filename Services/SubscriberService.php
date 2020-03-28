@@ -19,18 +19,39 @@ class SubscriberService extends AService implements IService
 
     public function addSubscriberToList(FormedOutSubscriber $subscriberFromForm)
     {
+
+
         $list_id = $subscriberFromForm->getListToAddId();
+
+
+        //todo send welcome letter using kmail
 
        $storedSubscriber = $this->repository->getOrInsert($subscriberFromForm);
        $result =   $this->repository->addSubscriberToList($storedSubscriber,$list_id);
        return $result;
     }
+    public function removeSubscriberToList(FormedOutSubscriber $subscriberFromForm)
+    {
+
+
+        $list_id = $subscriberFromForm->getListToAddId();
+
+
+        //todo send welcome letter using kmail
+
+       $storedSubscriber = $this->repository->removeSubscriberToList($subscriberFromForm);
+       $result =   $this->repository->addSubscriberToList($storedSubscriber,$list_id);
+       return $result;
+    }
+
 
 
    
     public function subscriberExistsInList(FormedOutSubscriber $subscriberFromForm)
     {
-      //  $this->service->subscriberExistsInList()
+     $found = $this->repository->subscriberExistsInList($subscriberFromForm);
+     return  $found ;
+
     }
 
 }

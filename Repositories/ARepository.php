@@ -3,7 +3,14 @@
 namespace Repository
 {
     require_once  dirname(__FILE__)."/../Models/ModelList.php";
+    require_once dirname(__FILE__)."/../Models/KError.php";
+    require_once dirname(__FILE__)."/../K_Utilities/KException.php";
+    require_once dirname(__FILE__)."/../K_Utilities/KErrorCodeMap.php";
+
+    use K_Utilities\KErrorCodeMap;
+    use K_Utilities\KException;
     use \models\ModelList;
+    use \models\KError;
 
     class ARepository
     {
@@ -24,6 +31,29 @@ namespace Repository
             $this->_queryBoard["insertUserQuery"] = "INSERT INTO  `".$usersTableName."` ( `name`, email) values ('%s','%s');";
         }
 
+
+
+        protected function getFunctionAddress($functionName)
+        {
+            $result = get_class($this)."-->".$functionName;
+
+            return $result;
+        }
+
+        protected function logAndThrow($errorCode,$location,$errorMessage=null)
+        {
+            $errorMessage = isset($errorMessage)? $errorMessage : KErrorCodeMap::errorCodeDescription($errorCode);
+            $error = new KError($errorMessage,$location,$errorCode);
+
+            $this->logTool->log($error->_toJson());
+
+
+            $exception = new KException($error);
+
+            throw $exception;
+
+
+        }
 
         protected function _insert( $insertArgs)
         {
