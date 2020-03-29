@@ -1,6 +1,7 @@
 <?php
 namespace models;
 
+use Exception;
 use models\interfaces\IModel;
 
 require_once dirname(__FILE__)."/interfaces/IModel.php";
@@ -20,6 +21,11 @@ class FormedOutSubscriber extends AModel implements IModel
 
     public function __construct($raw)
     {
+        if(!array_key_exists("email",$raw) )
+            throw new Exception("missing email in:". json_encode($raw));
+        if(!array_key_exists("name",$raw))
+            throw new Exception("missing name in:". json_encode($raw));
+        
 
           $d = isset( $raw["dateAdded"]) ?  $raw["dateAdded"] : new \DateTime();
         $this->email = $raw["email"];
