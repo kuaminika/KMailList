@@ -61,8 +61,10 @@ class SubscriberRepository extends ARepository implements IRepository
 
     public function getSubscriberInListLike( $listId)
     {
-        $query =  $this->_queryBoard["selectSubscribersForList"]." WHERE m.list_id=".$listId;
 
+        $this->logTool->showObj($listId);
+        $query =  $this->_queryBoard["selectSubscribersForList"]." WHERE m.list_id=".$listId;
+        $this->logTool->log($query);
         $dbResultSet =   $this->dbTool->runQuery($query)->fetchAll();
         $result =  $this->_convertResultSetToStoredTypeList("models\StoredSubscriber",$dbResultSet);
         return $result;

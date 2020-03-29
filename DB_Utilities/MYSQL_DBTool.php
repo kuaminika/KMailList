@@ -80,9 +80,9 @@ require_once "IDBTool.php";
              {
                  if(!isset($this->connection)) throw new Exception("cannot do".$query.":no connection established");
                 
-                 if($this->queryObjectOpened)
-                   $this->queryStatement->close();
-
+                 if($this->queryObjectOpened && $this->queryStatement)
+                     $this->queryStatement->close();
+                
                 $this->queryStatement = $this->connection->prepare($query);
 
                 if(!$this->queryStatement) throw new Exception('Unable to prepare MySQL statement (check your syntax) - ' . $this->connection->error);    

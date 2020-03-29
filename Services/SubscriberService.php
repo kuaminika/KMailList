@@ -2,6 +2,7 @@
 
 namespace Service;
 
+use Exception;
 use models\FormedOutSubscriber;
 use Service\interfaces\IService;
 
@@ -30,13 +31,10 @@ class SubscriberService extends AService implements IService
        $result =   $this->repository->addSubscriberToList($storedSubscriber,$list_id);
        return $result;
     }
+
     public function removeSubscriberToList(FormedOutSubscriber $subscriberFromForm)
     {
-
-
         $list_id = $subscriberFromForm->getListToAddId();
-
-
         //todo send welcome letter using kmail
 
        $storedSubscriber = $this->repository->removeSubscriberToList($subscriberFromForm);
@@ -44,7 +42,13 @@ class SubscriberService extends AService implements IService
        return $result;
     }
 
+    public function getAllSubscriberFromList($list_id)
+    {
+        if(!$list_id) throw new Exception("missing list id");
 
+       $found =  $this->repository->getSubscriberInListLike($list_id);
+       return $found;
+    }
 
    
     public function subscriberExistsInList(FormedOutSubscriber $subscriberFromForm)

@@ -21,6 +21,29 @@ class SubscribersController extends AController
         $this->logTool->log(" Subscriber controller created");
     }
 
+
+    public function getSubscribersInList($list_id_holder)
+    {
+        try
+        {
+            $list_id = $list_id_holder["list_id"];
+            $result = $this->service->getAllSubscriberFromList($list_id);
+            $this->response['status_code_header'] = 'HTTP/1.1 200 OK';
+            $this->response['body'] = $result->_toJson();
+        }
+        catch(\K_Utilities\KException $ex)
+        {
+           $error =  $ex->getErrorModel();  
+          
+           $this->response['status_code_header'] = 'HTTP/1.1 200 OK';
+           $this->response['body'] =  $error->_toJson();
+        }
+        catch(Exception $ex)
+        {
+          $this->logAndSend("exception","addSubscriberToList",$ex->getMessage());
+        }
+    }
+
     public function addSubscriberToList($formedOutSubscriberArgs)
     {
 
