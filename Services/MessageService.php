@@ -16,6 +16,12 @@ class MessageService extends AService implements IService
     }
 
 
+    public function getById($id)
+    {
+       $result =  $this->repository->getById($id);
+       return $result;
+    }
+
     public function delete($iModel)
     {}
     public function update($iModel)

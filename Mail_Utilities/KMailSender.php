@@ -2,32 +2,27 @@
 
 namespace Mail_utilities;
 require_once dirname(__FILE__)."/../VendorUtilities/mailjet/vendor/autoload.php";
-
+require_once dirname(__FILE__)."/KMailTool.php";
 
 use Mailjet\Resources;
 
 class KMailSender extends KMailTool
 {    
     
-    function sendEMail($sender_Email,$recipientList_array,$content_String,$emailInfo = [])
+    function sendEMail($recipientList_array,IKMailMessage $message)//,$content_String,$emailInfo = [])
     {
-        
+        $sender_Email = $message ->getSender();
         $this->logTool->showObj($recipientList_array);
 
        $this->logTool->log("body bout to be created");
         $body =	[
             
-            'FromEmail' => $sender_Email,            
-            'FromName' => $this->projectName." - Contact",            
-            'Subject' => "Message from contact form",            
-            'Text-part' => "This is to inform that a message was sent from the contact form:".json_encode($emailInfo),
-            'Html-part' => "
-            
-			       <h3>This is to inform that a message was sent from the contact form:</h3>
-            
-			 ".$content_String ,
-            
-            'Recipients' =>$recipientList_array
+            'FromEmail'  => $sender_Email,            
+            'FromName'   => $this->projectName,            
+            'Subject'    => $message->getSubject()." - ".$message->getPurpose(),            
+            'Text-part'  => $message->textPart(),
+            'Html-part'  => $message->getContent(),            
+            'Recipients' => $recipientList_array
             
         ];
         $this->logTool->log("body created");

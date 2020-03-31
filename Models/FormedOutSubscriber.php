@@ -2,12 +2,12 @@
 namespace models;
 
 use Exception;
-use models\interfaces\IModel;
+use models\interfaces\ISubscriber;
 
-require_once dirname(__FILE__)."/interfaces/IModel.php";
+require_once dirname(__FILE__)."/interfaces/ISubscriber.php";
 require_once dirname(__FILE__)."/AModel.php";
 
-class FormedOutSubscriber extends AModel implements IModel 
+class FormedOutSubscriber extends AModel implements ISubscriber 
 {
 
 
@@ -54,6 +54,11 @@ class FormedOutSubscriber extends AModel implements IModel
         $this->dateAdded = $dateAdded;
 
         return $this;
+    }
+
+    public function getAddedBy()
+    {
+        return "";
     }
 
     /**

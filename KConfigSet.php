@@ -19,6 +19,15 @@ class KConfigSet{
         return $result;
     }
 
+    /**
+     * this method creates configs that will not be kept globally
+     */
+    public static function createLocalConfigSet($configArray)
+    {
+        $result = new KConfigSet($configArray);
+        return $result;
+    }
+
     private function __construct($configArray)
     {
         $this->configSetArray = $configArray;

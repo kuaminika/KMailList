@@ -2,7 +2,7 @@
 
 namespace models;
 require_once dirname(__FILE__)."/interfaces/ISubscriber.php";
-
+require_once dirname(__FILE__)."/StoredUser.php";
 
 use models\interfaces\ISubscriber;
 

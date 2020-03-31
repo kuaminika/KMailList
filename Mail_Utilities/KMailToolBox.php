@@ -1,5 +1,8 @@
 <?php
 namespace Mail_utilities;
+
+
+require_once dirname(__FILE__)."/../KConfigSet.php";
 //require_once dirname(__FILE__)."/../Log_Utilities/ILogTool.php";
 class KMailToolBox
 {    
@@ -8,14 +11,21 @@ class KMailToolBox
     var $apisecret;
     var $logTool;
 
-    function __construct($mailConfigs)//$apiKey,$apiSecret,$projectName)
+    var $purposedEmails;
+    var $purposedEmailSenders;
+    function __construct($mailConfigs,$logTool)//$apiKey,$apiSecret,$projectName)
     {
-  
-        $this->apikey = $mailConfigs["apiKey"];
-        $this->apisecret = $mailConfigs["apiSecret"];
-        $this->projectName = $mailConfigs["projectName"];
+       // $mailConfigs = $configs->getConfig("mailConfigs");
+        $mailConfigSet = \KConfigSet::createLocalConfigSet($mailConfigs);
+        $this->apikey = $mailConfigSet->getConfig("apiKey");// $mailConfigs ["apiKey"];
+        $this->apisecret = $mailConfigSet->getConfig("apiSecret");//$mailConfigs["apiSecret"];
+        $this->projectName = $mailConfigSet->getConfig("projectName");//$mailConfigs["projectName"];
 
-        $this->logTool = $mailConfigs["logTool"];
+        $this->purposedEmails = $mailConfigSet->getConfig("purposedEmailConfigs");//$mailConfigs["purposedEmailConfigs"];
+
+        $this->purposedEmailSenders =$mailConfigSet->getConfig("purposedEmailAuthor");// $mailConfigs["purposedEmailAuthor"];
+
+        $this->logTool = $logTool;// $configs->getConfig("currentLogTool");
         
         $this->logTool->log("done constructing KMailToolBox");
     }

@@ -6,7 +6,8 @@ require_once dirname(__FILE__)."/AController.php";
 require_once dirname(__FILE__)."/ControllerToolBox.php";
 require_once dirname(__FILE__)."/../Models/FormedOutSubscriber.php";
 require_once dirname(__FILE__)."/../Models/KError.php";
-//use models\FormedOutMailingListDescription;
+require_once dirname(__FILE__)."/../Mail_Utilities/KMailFacade.php";
+
 
 use Exception;
 use \models\FormedOutSubscriber;
@@ -52,10 +53,14 @@ class SubscribersController extends AController
 
             $newSubscriber = new FormedOutSubscriber($formedOutSubscriberArgs);
 
-            $this->response['status_code_header'] = 'HTTP/1.1 200 OK';
-         
 
+          
+
+            $kMailFacade = \Mail_utilities\KMailFacade::create();        
+            $purposedMail = $kMailFacade->getPurposedEmail("thanksForJoining","fr");        
+            $kMailFacade->thankForJoiningMailingList( $purposedMail, $newSubscriber );
             
+            $this->response['status_code_header'] = 'HTTP/1.1 200 OK';          
             $newList = $this->service->addSubscriberToList($newSubscriber);
             $this->response['body'] =   $newList->_toJson();
 

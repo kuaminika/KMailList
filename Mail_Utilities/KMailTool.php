@@ -16,7 +16,7 @@ abstract class KMailTool
         $this->apisecret = $toolBox->apisecret;
         $this->projectName = $toolBox->projectName;
         $this->logTool = $toolBox->logTool;
-       $this->logTool->log("done constructing kmailtool");
+        $this->logTool->log("done constructing kmailtool");
     }
     
     function showDataPretty($data)    
