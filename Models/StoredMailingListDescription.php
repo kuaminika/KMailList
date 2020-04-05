@@ -12,6 +12,7 @@ namespace models
     private $id; 
     private $owner_id;
     private $owner;
+    private $memberCount;
 
 
     public function __construct($raw)
@@ -19,6 +20,7 @@ namespace models
           $this->id = $raw["mailingList_id"];
           $this->name = $raw["name"];
           $this->owner_id =  $raw["owner_id"];
+          $this->memberCount= $raw["member_count"];
           $raw["name"]= $raw["owner_name"];
           $raw["email"]= $raw["owner_email"];
           $raw["publisherId"] = $this->owner_id;
@@ -105,7 +107,16 @@ namespace models
         return $this;
     }
 
+    
+    /**
+     * Get the value of memberCount
+     */ 
+    public function getMemberCount()
+    {
+        return $this->memberCount;
+    }
  }
+
 
 
 }

@@ -1,90 +1,40 @@
-kLib.MainCourrier.hostURL = "https://vps.cybereq.com/KuaminikaWorkspace/KMailList/API/index.php";
+kLib.APIMainCourrier.hostURL = "https://vps.cybereq.com/KuaminikaWorkspace/KMailList/API/index.php";
 
 
-var test1_id = "test1";
+var app = app||{};
+kLib.mapTemplate("selfAddTestController","views/selfAddTest.html");
+kLib.mapTemplate("viewAllMailingListsController","views/viewMailingLists.html");
 
-var  formToAdd = kLib.initForm({id:test1_id
-                                    ,submitBtnId:"submitBtn_MailingList"
-                                    ,courrierTool:kLib.MainCourrier});
 
-  function whenClickedToAdd()
-  {
-        var me = this;
-        me.sendInfo("?context=Subscriber&requestAction=addSubscriberToList",function(response){
+function activateSection(btn)
+{
+    var controllerName = btn.getAttribute("data-controller");
+    var controller = kLib.getController(controllerName);
 
-            
-        var itsAnError =   response.data._class === "models\\KError"
-        if(itsAnError)
-            {    console.error(response.data);
-                throw response.data
-            }
+    if(!controller.url)
+    {   kLib.removeClassToAllWithClassName("nav-item ","active");
+    kLib.addClasstoElement(btn.parentElement,"active");  
+        kLib.removeClassToAllWithClassName("test-page","active");
+        var section =  document.getElementById(controllerName);
+        kLib.addClasstoElement(section,"active");
+        section.innerHTML = "";
+        return;
+    }
 
-            listOfsubscribersTemplate.data = response.data;
-            listOfsubscribersTemplate.render();
+
+    kLib.MainCourrier.get(controller.url).then( function(response)
+    {
+        kLib.removeClassToAllWithClassName("nav-item ","active");
+        kLib.addClasstoElement(btn.parentElement,"active");  
+        kLib.removeClassToAllWithClassName("test-page","active");
+     
+        var htmlView = response.data;
+       var section =  document.getElementById(controllerName);
+       kLib.addClasstoElement(section,"active");
+        section.innerHTML = htmlView || "";
+        controller.run()
         });
-  }
-    
-   formToAdd.setSubmitProcedure(whenClickedToAdd);
 
+}
 
-
-
-var listOfsubscribersTemplate = kLib.initTemplate({id:"listOfsubscribers"});
-
-listOfsubscribersTemplate.fetchProcedure = (function(callback)
-{
-    var me = this;
-    kLib.MainCourrier.get("?context=Subscriber&requestAction=getSubscribersInList&list_id=1")
-     .then(function(response)
-      {       
-
-        var itsAnError =   response.data._class === "models\\KError"
-        if(itsAnError)
-           {     console.error(response.data);
-                 throw response.data.message;
-                }
-        me.data = response.data;
-        callback();
-    });
-
-}).bind(listOfsubscribersTemplate);
-
-listOfsubscribersTemplate.render = (function()
-{
-    var data =this.data;
-    var holder = document.getElementById(this.id);
-    var tbl   =  document.createElement("table");
-    tbl.className = "table table-striped";
-
-
-    tbl.tHead =tbl.tHead|| document.createElement("thead");
-    tbl.tHead.innerHTML =  "<tr>"
-            +"<th>id</th>"
-            +"<th>name</th>"
-            +"<th>email</th>"
-            +"<th>added by</th>"
-        +"</tr>"; 
-
-   var tbody =  tbl.tBody || document.createElement("tbody");
-    var tbodyContentStr = "";
-    data.forEach(element => {
-        tbodyContentStr+=  "<tr>"
-        +"<td>"+element.id+"</td>"
-        +"<td>"+element.name+"</td>"
-        +"<td>"+element.email+"</td>"
-        +"<td>"+element.addedBy+"</td>"
-    +"</tr>"
-        console.log(tbodyContentStr);
-    });
-
-
-    tbody.innerHTML = tbodyContentStr;
-    tbl.appendChild(tbody)
-
-
-    holder.innerHTML = "";
-        holder.appendChild(tbl)
-    console.log(this);
-}).bind(listOfsubscribersTemplate);
-
-listOfsubscribersTemplate.fetch();
+app[activateSection.name]= activateSection;

@@ -39,7 +39,10 @@ if( !array_key_exists("context",$request))
 $requestParams = $request;
 if($requestMethod == "POST")
 {
-    $requestParams = $_POST;
+    $json = file_get_contents('php://input');
+   $json_decoded = ["jsonValue" =>json_decode($json)];
+   
+    $requestParams = array_merge($_POST,$json_decoded);
 }
 unset($requestParams["context"]);
 unset($requestParams["requestAction"]);

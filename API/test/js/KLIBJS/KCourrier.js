@@ -18,7 +18,6 @@
         result.id = id;
         return result;
     }
-    kLib.kCourierOptions =  kLib.kCourierOptions || generateOptions();
     kLib.initCourrier = function(kCourierOptions)
     {
 
@@ -33,9 +32,12 @@
 
         return result;
 	}
+	var apiMainOptions = generateOptions();
 	
-	kLib.MainCourrier = kLib.initCourrier( kLib.kCourierOptions);
+	kLib.APIMainCourrier = kLib.initCourrier( apiMainOptions);
+	var mainOptions = generateOptions();
 
+	kLib.MainCourrier = kLib.initCourrier(mainOptions);
     function KuaminikaCourrier(courrierOptions)
 	{
         courrierOptions =  courrierOptions|| kLib.kCourierOptions;
@@ -59,7 +61,7 @@
 
 				reject = reject ||snitchProblem;
 				try 
-				{
+				{					
 					var fullURL = self.hostURL+restOfUrl;
 					axios.post(fullURL,data,headerRules).then(resolve,reject);
 				}

@@ -5,8 +5,12 @@ require_once dirname(__FILE__)."/interfaces/ISubscriber.php";
 require_once dirname(__FILE__)."/StoredUser.php";
 
 use models\interfaces\ISubscriber;
+use stdClass;
 
-
+/**
+ * this model represents a susbcriber from a list. 
+ * not a subscriber for as a whole
+ */
 class StoredSubscriber extends StoredUser implements ISubscriber
 {/*
     private $id;
@@ -15,28 +19,55 @@ class StoredSubscriber extends StoredUser implements ISubscriber
     private $name;
 */
     private $subscriberId;
-
+    private $membershipId;
     private $dateAdded;
     private $addedById;
     private $addedBy;
+    private $listId;
     
-    public function __construct($raw)
-    {
-        
+    public function __construct($raw=null)
+    {        
+        if(!isset($raw)) return;
+     
+        $raw = $this->confirmMembershipInfo($raw);
         $this->id = $raw["user_id"];
-
         $this->email = $raw["email"];
         $this->name = $raw["name"];
-
+        $this->listId = $raw["list_id"];
         $this->subscriberId = $raw["id"];
-
+        $this->membershipId = $raw["membership_id"];
         $this->dateAdded = $raw["date_subscribed"];
         $this->addedById = $raw["added_by_id"];
         $this->addedBy = $raw["added_by"];
+    }
 
+    private function confirmMembershipInfo($raw)
+    {
+        $defaultListId = 999;
+        if(!key_exists("list_id",$raw))
+            $raw["list_id"]= $defaultListId;
+       
+        if(!key_exists("membership_id",$raw))
+            $raw["membership_id"]=  $raw["user_id"];
+
+        return $raw;
     }
 
 
+    public function createFromStdObj(stdClass $raw)
+    {
+        $this->id = $raw->id;
+        $this->email = $raw->email;
+        $this->name = $raw->name;
+        $this->listId = $raw->listId;
+        $this->subscriberId = $raw->subscriberId;
+        $this->membershipId = $raw->membershipId;
+        $this->dateAdded = $raw->dateAdded;
+        $this->addedById = $raw->addedById;
+        $this->addedBy = $raw->addedBy;
+    }
+
+  
     /**
      * Get the value of dateAdded
      */ 
@@ -119,6 +150,22 @@ class StoredSubscriber extends StoredUser implements ISubscriber
     }
 
    
+
+    /**
+     * Get the value of membershipId
+     */ 
+    public function getMembershipId()
+    {
+        return $this->membershipId;
+    }
+
+    /**
+     * Get the value of listId
+     */ 
+    public function getListId()
+    {
+        return $this->listId;
+    }
 }
 
 

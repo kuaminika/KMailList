@@ -11,6 +11,7 @@ require_once dirname(__FILE__)."/../Mail_Utilities/KMailFacade.php";
 
 use Exception;
 use \models\FormedOutSubscriber;
+use models\StoredSubscriber;
 
 class SubscribersController extends AController
 {
@@ -22,6 +23,17 @@ class SubscribersController extends AController
         $this->logTool->log(" Subscriber controller created");
     }
 
+    public function removeFromList($rawSubscriber)
+    {
+         $subscriber = new StoredSubscriber();
+         $subscriber->createFromStdObj($rawSubscriber["jsonValue"]);
+       
+        $this->service->removeSubscriberToList($subscriber);
+        $list_id = $subscriber->getListId();
+        $result = $this->service->getAllSubscriberFromList($list_id);
+        $this->response['status_code_header'] = 'HTTP/1.1 200 OK';
+        $this->response['body'] = $result->_toJson();
+    }
 
     public function getSubscribersInList($list_id_holder)
     {
@@ -45,6 +57,7 @@ class SubscribersController extends AController
         }
     }
 
+
     public function addSubscriberToList($formedOutSubscriberArgs)
     {
 
@@ -53,6 +66,7 @@ class SubscribersController extends AController
 
             $newSubscriber = new FormedOutSubscriber($formedOutSubscriberArgs);
 
+            $newList = $this->service->addSubscriberToList($newSubscriber);
 
           
 
@@ -61,7 +75,6 @@ class SubscribersController extends AController
             $kMailFacade->thankForJoiningMailingList( $purposedMail, $newSubscriber );
             
             $this->response['status_code_header'] = 'HTTP/1.1 200 OK';          
-            $newList = $this->service->addSubscriberToList($newSubscriber);
             $this->response['body'] =   $newList->_toJson();
 
         }

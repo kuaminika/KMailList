@@ -1,0 +1,48 @@
+<h1 class="d-flex justify-content-end mr-3">test self add to list <span class="list-id-holder"></span> </h1>
+
+  <select id="selectTag">
+    <option>n/a</option>
+  </select>
+
+
+<div class="d-flex justify-content-around">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalPopoversLabel">form to self add</h5>
+    </div>
+    <div class="modal-body">
+      <form id="test1">
+        <form class="" id="hmeMailingListForm" name="hmeForm_MailingList">
+          <div class="form-row mt-3">
+            <input type="text" id="visitorsNameField_MailingList" name="name" required="" class="form-control">
+            <label class="k-required-field-label  k-kaption-content" data-keyname="contactFieldLabel_name"
+              for="visitorsNameField_MailingList"> Name</label>
+            <div class="invalid-feedback">Name is required</div>
+          </div>
+          <div class="form-row">
+            <input type="email" name="email" class="form-control flex-fill mr-0 mr-sm-2 mb-3 mb-sm-0" required=""
+              id="emailForMailingList">
+            <label class="k-required-field-label  k-kaption-content" data-keyname="contactFieldLabel_email"
+              for="emailForMailingList"> Email</label>
+            <div class="invalid-feedback">Email is required</div>
+          </div>
+          <input type="hidden" name="listToAddId" value="1">
+          <div class="d-flex flex-column">
+            <a id="submitBtn_MailingList" type="submit" class="btn btn-primary mx-auto  k-kaption-content"
+              data-keyname="contactFieldLabel_send"> SEND</a>
+          </div>
+
+        </form>
+      </form>
+    </div>
+
+  </div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalPopoversLabel">list</h5>
+    </div>
+    <div class="modal-body">
+      <div id="listOfsubscribers"></div>
+    </div>
+
+  </div>

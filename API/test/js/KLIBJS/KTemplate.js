@@ -9,7 +9,7 @@
 		kLib.activeTemplates = kLib.activeTemplates || {};
 
 		if(kLib.activeTemplates[kTemplateOptions.id] )
-			return kLib.activeForms[kTemplateOptions.id] ;
+			return kLib.activeTemplates[kTemplateOptions.id] ;
 
 		var result = new KTemplate(kTemplateOptions);
 
@@ -18,11 +18,16 @@
 		return result;
 	}
 
+
+    
+
+
     function KTemplate(kTemplateOptions)
     {
         var me = this;
         me.id = kTemplateOptions.id;
         me.data = [];
+        me.dataHash = {};
         function abstractMethod(possibleCallBack)
         {
             console.log("this method should be implemented");
@@ -37,6 +42,15 @@
 
         me.render = abstractMethod;
         me.fetchProcedure = abstractMethod;
+
+        me.onRender = function(renderFn) { 
+             me.render = renderFn.bind(me);
+             console.log("set on render");
+          }    
+        me.onFetch = function(fetchProcedureFn) {  
+            me.fetchProcedure = fetchProcedureFn.bind(me);
+            console.log("set on fetch");
+          }    
 
         me.fetch = function()
         {

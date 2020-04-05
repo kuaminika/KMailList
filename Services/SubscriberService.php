@@ -4,6 +4,7 @@ namespace Service;
 
 use Exception;
 use models\FormedOutSubscriber;
+use models\StoredSubscriber;
 use Service\interfaces\IService;
 
 require_once dirname(__FILE__)."/interfaces/IService.php";
@@ -12,34 +13,19 @@ require_once dirname(__FILE__)."/AService.php";
 class SubscriberService extends AService implements IService
 
 {
-
-    public function delete($iModel)
-    {}
-    public function update($iModel)
-    {}
-
     public function addSubscriberToList(FormedOutSubscriber $subscriberFromForm)
     {
-
-
         $list_id = $subscriberFromForm->getListToAddId();
-
-
-        //todo send welcome letter using kmail
-
        $storedSubscriber = $this->repository->getOrInsert($subscriberFromForm);
        $result =   $this->repository->addSubscriberToList($storedSubscriber,$list_id);
        return $result;
     }
 
-    public function removeSubscriberToList(FormedOutSubscriber $subscriberFromForm)
+    public function removeSubscriberToList(StoredSubscriber $subscriberFromForm)
     {
-        $list_id = $subscriberFromForm->getListToAddId();
-        //todo send welcome letter using kmail
-
-       $storedSubscriber = $this->repository->removeSubscriberToList($subscriberFromForm);
-       $result =   $this->repository->addSubscriberToList($storedSubscriber,$list_id);
-       return $result;
+        $this->logTool->log("inside the the remove");
+        $this->logTool->log($subscriberFromForm->_toJson());
+        $this->repository->removeSubscriberToList($subscriberFromForm);     
     }
 
     public function getAllSubscriberFromList($list_id)

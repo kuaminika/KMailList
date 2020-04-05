@@ -48,6 +48,7 @@ class SubscriberRepository extends ARepository implements IRepository
                                                                 , s.id as id 
                                                                 , u.id as user_id
                                                                 , s.date_subscribed
+                                                                , m.id as membership_id
                                                                 , s.added_by_id
                                                                 , addor.name added_by
                                                           FROM `".$usersTableName."` u 
@@ -76,11 +77,16 @@ class SubscriberRepository extends ARepository implements IRepository
 
         $subscriberId = $storedSubscriber->getSubscriberId();
         try{
-      //  $subscriberId = $storedSubscriber->getSubscriberId();
+
+
+
         $insertQuery = sprintf($this->_queryBoard["insertSubscriberToList"],$subscriberId,$listId);
+        $this->logTool->log($insertQuery);
+
         $this->dbTool->runQuery($insertQuery);
 
-       $dbResultSet =  $this->dbTool->runQuery($this->_queryBoard["selectSubscribersForList"])->fetchAll();
+        $query =  $this->_queryBoard["selectSubscribersForList"]." WHERE m.list_id=".$listId;
+       $dbResultSet =  $this->dbTool->runQuery($query )->fetchAll();
        $result =  $this->_convertResultSetToStoredTypeList("models\StoredSubscriber",$dbResultSet);
        return $result;
         }
@@ -219,7 +225,22 @@ class SubscriberRepository extends ARepository implements IRepository
     }
 
 
-    public function delete($id){}
+   
+
+    public function removeSubscriberToList(StoredSubscriber $subscriberModel)
+    {
+        $id = $subscriberModel->getMembershipId();
+        $this->logTool->log("membership id:".$id);
+        $this->delete($id);
+    }
+
+    public function delete($id)
+    {
+        $this->logTool->log("map eseye delete:".$id);
+        $listMemebersTable =$this->configSet->getConfig("subscribersListTableName");
+
+        $this->deleteRecord($listMemebersTable,$id);
+    }
     public function update($iModel){}
     public function findAll(){
 

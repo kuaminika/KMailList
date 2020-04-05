@@ -33,10 +33,18 @@ namespace Repository
 
 
 
+        protected function deleteRecord($tableName,$id)
+        {
+            $this->logTool->log("inside delete record");
+            $query = "DELETE FROM `".$tableName."` WHERE id =".$id.";";
+            $this->logTool->log($query);
+            $this->dbTool->runQuery($query);
+        }
+
+
         protected function getFunctionAddress($functionName)
         {
             $result = get_class($this)."-->".$functionName;
-
             return $result;
         }
 
@@ -46,7 +54,6 @@ namespace Repository
             $error = new KError($errorMessage,$location,$errorCode);
 
             $this->logTool->log($error->_toJson());
-
 
             $exception = new KException($error);
 
