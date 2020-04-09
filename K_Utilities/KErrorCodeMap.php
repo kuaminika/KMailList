@@ -16,7 +16,10 @@ class KErrorCodeMap
     private static $codeMap = [
         "exception" => ["description"=>"An Exception occured"]
     ,   "unkwonCode"=> ["description"=>"Error type '%s'  not registered"]
-    ,   "alreadyExists"=>["description"=>"record already exists"]
+    ,   "alreadyExists"=>["description"=>"Record already exists"]
+    ,   "tokenNotFound"=>["description"=>"Token not found"]
+    ,   "tokenExpired"=>["description"=>"Token is exipired"]
+    ,   "tokenInvald"=>["description"=>"Token is Invalid"]
 ];
 
 public static function  errorCodeDescription($code)

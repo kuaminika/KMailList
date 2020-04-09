@@ -6,6 +6,12 @@ require_once dirname(__FILE__)."/../KConfigSet.php";
 require_once dirname(__FILE__)."/../Services/ServiceToolBox.php";
 require_once dirname(__FILE__)."/../Services/_requireAllServices.php";
 
+require_once dirname(__FILE__)."/../Security_Utilities/Token_Utilities/KTokenFacade.php";
+require_once dirname(__FILE__)."/../Security_Utilities/Token_Utilities/KTokenToolBox.php";
+
+
+use Security_Utilities\Token_Utilities\KTokenFacade;
+use Security_Utilities\Token_Utilities\KTokenToolBox;
 class ControllerToolBox
 {
 
@@ -14,6 +20,7 @@ class ControllerToolBox
     private $requestAction;
     private $requestParams;
     private $requestMethod;
+    private $tokenFacade;
 
     public function __construct($param)
     {
@@ -22,6 +29,8 @@ class ControllerToolBox
         $this->requestAction = $param["requestAction"];
         $this->requestParams = $param["requestParams"];
         $this->requestMethod = $param["requestMethod"];
+        $this->tokenFacade = $param["tokenFacade"];
+
     }
 
     private static function getBlankCreateParams()
@@ -45,16 +54,26 @@ class ControllerToolBox
         //todo figure out what must be done when context not found
         $serviceName = "\\Service\\".$context."Service";
 
+
+        $tokenConfigArr = $configs->getConfig("tokenConfigs");
+        $toolbox = new KTokenToolBox($tokenConfigArr);
+        $toolbox->requestParamsArr = $createParams;
+
+        $tokenFacade = KTokenFacade::create($toolbox);
+
+
+
         $serviceToolBox = \Service\ServiceToolBox::createToolBox($context,$configs);
 
         $service = new $serviceName($serviceToolBox);
     
         $param = array(
-             "logTool"       => $serviceToolBox->logTool
-            ,"service"       => $service
-            ,"requestAction" => isset($createParams["requestAction"]) ? $createParams["requestAction"]:"index"
-            ,"requestParams" => $createParams["requestParams"]
+             "logTool"        => $serviceToolBox->logTool
+            ,"service"        => $service
+            ,"requestAction"  => isset($createParams["requestAction"]) ? $createParams["requestAction"]:"index"
+            ,"requestParams"  => $createParams["requestParams"]
             ,"requestMethod"  => isset($createParams["requestMethod"]) ? $createParams["requestMethod"]:"GET"
+            ,"tokenFacade"    => $tokenFacade
         ); 
 
         $result = new ControllerToolBox($param);
@@ -100,6 +119,15 @@ class ControllerToolBox
     public function getRequestMethod()
     {
         return $this->requestMethod;
+    }
+
+
+    /**
+     * Get the value of tokenFacade
+     */ 
+    public function getTokenFacade()
+    {
+        return $this->tokenFacade;
     }
 }
 ?>

@@ -4,6 +4,7 @@ namespace K_Utilities;
 
 use Exception;
 
+
 class KException extends Exception
 {
     var $errorModel;

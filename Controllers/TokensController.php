@@ -1,49 +1,46 @@
 <?php 
-namespace Controllers;
 
-require_once dirname(__FILE__)."/ControllerToolBox.php";
+namespace Controllers;
+require_once dirname(__FILE__)."/../Log_Utilities/ILogTool.php";
+require_once dirname(__FILE__)."/../Security_Utilities/Token_Utilities/KTokenFacade.php";
 require_once dirname(__FILE__)."/../Models/KError.php";
 require_once dirname(__FILE__)."/../K_Utilities/KErrorCodeMap.php";
 
+
+use Log_Utilities\ILogTool;
+use Security_Utilities\Token_Utilities\KTokenFacade;
+
 use K_Utilities\KErrorCodeMap;
 use models\KError;
-abstract class AController
+class TokensController 
 {
-    protected $service;
-    protected $logTool;
+
+
+  
+    private $logTool;
     private $requestAction;
     private $params;
-    protected $response;
+    private $response;
     private $kTokenFacade;
 
-    public function __construct(ControllerToolBox $toolbox)
+
+    public function __construct($requestAction,$params,KTokenFacade $kTokenFacade,ILogTool $logTool)
     {
-      $this->service = $toolbox->getService();
-      $this->logTool = $toolbox->getLogTool();
-      $this->requestAction = $toolbox->getRequestAction();
-      $this->requestMethod = $toolbox->getRequestMethod();
-      $this->params = $toolbox->getRequestParams();
-      $this->response = ["status_code_header"=>"HTTP/1.1 200 OK",
-                        "body"=>json_encode([])
-                        ];
-      $this->kTokenFacade = $toolbox->getTokenFacade();
-  
+        $this->requestAction = $requestAction;
+        $this->params = $params;
+        $this->kTokenFacade = $kTokenFacade;
+        $this->logTool = $logTool;
+
+        $this->logTool->log("Token controller created");
     }
 
 
-    public function index()
+    public function authenticate()
     {
-      $result = "index";
-      $this->response['status_code_header'] = 'HTTP/1.1 200 OK';
-      $this->response['body'] = $result;
+        
     }
 
-    public function findAll()
-    {
-      $result = $this->service->findAll();
-      $this->response['status_code_header'] = 'HTTP/1.1 200 OK';
-      $this->response['body'] = $result->_toJson();
-    }
+
 
 
     protected function logAndSend($errorCode,$location,$errorMessage=null)
@@ -59,6 +56,7 @@ abstract class AController
 
 
     }
+    
     public function processRequest()
     {
         try 
@@ -66,7 +64,7 @@ abstract class AController
           $params = $this->params;
 
 
-      //    $this->kTokenFacade->validateToken();  
+          $this->kTokenFacade->validateToken();  
         
           call_user_func_array(array($this, $this->requestAction), [$params]);
   
@@ -91,8 +89,8 @@ abstract class AController
         }
     }
 
-
-
+    
 }
+
 
 ?>

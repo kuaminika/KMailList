@@ -63,9 +63,12 @@ class SubscribersController extends AController
 
         try
         {
-
+            $itComesFromJSONForm = isset($formedOutSubscriberArgs["jsonValue"]);
+            $formedOutSubscriberArgs = $itComesFromJSONForm ?(array) $formedOutSubscriberArgs["jsonValue"]: $formedOutSubscriberArgs ;
+          
             $newSubscriber = new FormedOutSubscriber($formedOutSubscriberArgs);
 
+          
             $newList = $this->service->addSubscriberToList($newSubscriber);
 
           
