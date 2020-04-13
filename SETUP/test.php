@@ -13,16 +13,18 @@ require_once "./SetDBCommand.php";
 require_once "./SetUpBuilder.php";
 require_once "../DB_Utilities/MYSQL_DBTool.php";
 require_once "../KConfigSet.php";
+require_once "../config.php";
 
-$servername = "localhost";
-$username = "datauser";
-$password= "data100";
-$dbname = "K_mail_list";            
+$servername = $dbSetUpConfigs["servername"] ;
+$username =$dbSetUpConfigs["username"];
+$password= $dbSetUpConfigs["password"];
+$dbname = $dbSetUpConfigs["dbname"];            
 
 $dbTool = new  DB_Utilities\MYSQL_DBTool($servername, $username, $password, $dbname);
 $logTool_main = new Log_Utilities\EchoLogTool("logTool_main");
 $logTool = new Log_Utilities\EchoLogTool("SetUpLog");
-
+$logTool->log($dbname);
+/*
 $settings = array(
     "usersTableName" =>"User",
     "publishersTableName"=>"Publisher",
@@ -33,11 +35,11 @@ $settings = array(
     "logToolTableName"=>"Log"
 );
 
-
+*/
 try
 {
 
-    $configs =  \KConfigSet::createNewConfigs($settings );
+    $configs =  \KConfigSet::createNewConfigs($globalSettings );
 
     $logTool_main->log("about to instanciate SetDBCommand");
     $dbCommand = new SETUP\SetDBCommand($dbTool,$logTool,$configs);
