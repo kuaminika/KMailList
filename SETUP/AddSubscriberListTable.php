@@ -29,7 +29,7 @@ namespace SETUP{
         public function _runSetUp()
         {
             $tableName = $this->configSet->getConfig("subscribersListTableName");
-            $fkHostTableName = $this->configSet->getConfig("publishersTableName");
+            $fkHostTableName = $this->configSet->getConfig("listsTableName");
             $fk2HostTableName = $this->configSet->getConfig("subscribersTableName");
           
             $tbExistRslt = $this->dbTool->tableExists( $tableName);      
@@ -48,9 +48,10 @@ namespace SETUP{
           
             
             $this->dbTool->runQuery($createUsersTblQuery);
+            $this->dbTool->runQuery("ALTER TABLE `". $tableName."`ADD PRIMARY KEY (`id`);");
             $this->dbTool->runQuery("ALTER TABLE `". $tableName."` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;");
 
-            $this->dbTool->runQuery("ALTER TABLE `". $tableName."` ADD UNIQUE( `unique_list_subscriber`, `list_id`);");
+            $this->dbTool->runQuery("ALTER TABLE `". $tableName."` ADD UNIQUE( `subscriber_id`, `list_id`);");
 
             $this->dbTool->fkBuildFKCommand($fk2HostTableName,$tableName,"subscriber_id","id");
 
