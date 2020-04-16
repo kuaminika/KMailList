@@ -57,6 +57,35 @@ class SubscribersController extends AController
         }
     }
 
+    public function addSubscriberToList_selfAdd($formedOutSubscriberArgs)
+    {
+        try {
+            $itComesFromJSONForm = isset($formedOutSubscriberArgs["jsonValue"]);
+            $formedOutSubscriberArgs = $itComesFromJSONForm ?(array) $formedOutSubscriberArgs["jsonValue"]: $formedOutSubscriberArgs ;
+          
+            $newSubscriber = new FormedOutSubscriber($formedOutSubscriberArgs);
+
+          
+            $newList = $this->service->addSubscriberToList($newSubscriber);
+
+
+            $result = $this->messageMap->getCode("thanksForJoin");
+            
+            $this->response['status_code_header'] = 'HTTP/1.1 200 OK';          
+            $this->response['body'] =  json_encode($result);
+        }
+        catch(\K_Utilities\KException $ex)
+        {
+           $error =  $ex->getErrorModel();  
+          
+           $this->response['status_code_header'] = 'HTTP/1.1 200 OK';
+           $this->response['body'] =  $error->_toJson();
+        }
+        catch(Exception $ex)
+        {
+          $this->logAndSend("exception","addSubscriberToList",$ex->getMessage());
+        }
+    }
 
     public function addSubscriberToList($formedOutSubscriberArgs)
     {

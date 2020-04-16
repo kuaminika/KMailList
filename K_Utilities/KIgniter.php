@@ -1,6 +1,7 @@
 <?php
 
 namespace K_Utilities;
+require_once dirname(__FILE__)."/KMessageCodeMap.php";
 require_once dirname(__FILE__)."/../DB_Utilities/MYSQL_DBTool.php";
 require_once dirname(__FILE__)."/../Log_Utilities/LogToolCreator.php";
 require_once dirname(__FILE__)."/../KConfigSet.php";
@@ -14,7 +15,7 @@ class KIgniter
         global $globalSettings,$dbSetUpConfigs; 
 
             
-         $servername = $dbSetUpConfigs["servername"];
+        $servername = $dbSetUpConfigs["servername"];
         $username =  $dbSetUpConfigs["username"];
         $password =  $dbSetUpConfigs["password"];
         $dbname =  $dbSetUpConfigs["dbname"];         

@@ -5,6 +5,7 @@ require_once dirname(__FILE__)."/ControllerToolBox.php";
 require_once dirname(__FILE__)."/../Models/KError.php";
 require_once dirname(__FILE__)."/../K_Utilities/KErrorCodeMap.php";
 
+use K_Utilities\KMessageCodeMap;
 use K_Utilities\KErrorCodeMap;
 use models\KError;
 abstract class AController
@@ -16,8 +17,11 @@ abstract class AController
     protected $response;
     private $kTokenFacade;
 
+    protected $messageMap;  
+
     public function __construct(ControllerToolBox $toolbox)
     {
+      $this->messageMap = $toolbox->getMessageMap();
       $this->service = $toolbox->getService();
       $this->logTool = $toolbox->getLogTool();
       $this->requestAction = $toolbox->getRequestAction();
