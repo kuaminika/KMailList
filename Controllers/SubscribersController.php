@@ -59,15 +59,19 @@ class SubscribersController extends AController
 
     public function addSubscriberToList_selfAdd($formedOutSubscriberArgs)
     {
-        try {
+        try
+         {
             $itComesFromJSONForm = isset($formedOutSubscriberArgs["jsonValue"]);
             $formedOutSubscriberArgs = $itComesFromJSONForm ?(array) $formedOutSubscriberArgs["jsonValue"]: $formedOutSubscriberArgs ;
           
             $newSubscriber = new FormedOutSubscriber($formedOutSubscriberArgs);
 
-          
             $newList = $this->service->addSubscriberToList($newSubscriber);
 
+            $language =  array_key_exists("language",$formedOutSubscriberArgs) ? $formedOutSubscriberArgs["language"] :"en";
+            $kMailFacade = \Mail_utilities\KMailFacade::create();        
+            $purposedMail = $kMailFacade->getPurposedEmail("thanksForJoining",$language);        
+            $kMailFacade->thankForJoiningMailingList( $purposedMail, $newSubscriber );
 
             $result = $this->messageMap->getCode("thanksForJoin");
             

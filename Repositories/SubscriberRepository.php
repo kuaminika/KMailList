@@ -92,8 +92,7 @@ class SubscriberRepository extends ARepository implements IRepository
         }
         catch(Exception $ex)
         {
-            
-           $ducplicateError = sprintf("Duplicate entry '%s' for key 'unique_list_subscriber'",$subscriberId."-".$listId);
+           $ducplicateError = sprintf("Duplicate entry '%s' for key 'subscriber_id'",$subscriberId."-".$listId);
            $itsDublicate =  strpos($ex->getMessage(), $ducplicateError) ;
 
             if($itsDublicate)
