@@ -13,7 +13,9 @@ require_once "./SetDBCommand.php";
 require_once "./SetUpBuilder.php";
 require_once "../DB_Utilities/MYSQL_DBTool.php";
 require_once "../KConfigSet.php";
+
 require_once "../configs.php";
+
 
 $servername = $dbSetUpConfigs["servername"] ;
 $username =$dbSetUpConfigs["username"];
