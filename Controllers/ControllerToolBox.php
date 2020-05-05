@@ -6,10 +6,12 @@ require_once dirname(__FILE__)."/../KConfigSet.php";
 require_once dirname(__FILE__)."/../Services/ServiceToolBox.php";
 require_once dirname(__FILE__)."/../Services/_requireAllServices.php";
 
+require_once dirname(__FILE__)."/../K_Utilities/KMessageCodeMap.php";
 require_once dirname(__FILE__)."/../Security_Utilities/Token_Utilities/KTokenFacade.php";
 require_once dirname(__FILE__)."/../Security_Utilities/Token_Utilities/KTokenToolBox.php";
 
 
+use K_Utilities\KMessageCodeMap;
 use Security_Utilities\Token_Utilities\KTokenFacade;
 use Security_Utilities\Token_Utilities\KTokenToolBox;
 class ControllerToolBox
@@ -21,9 +23,11 @@ class ControllerToolBox
     private $requestParams;
     private $requestMethod;
     private $tokenFacade;
+    private $messageMap;
 
     public function __construct($param)
     {
+        $this->messageMap = $param["messageMap"]; 
         $this->service = $param["service"];
         $this->logTool = $param["logTool"];
         $this->requestAction = $param["requestAction"];
@@ -47,6 +51,7 @@ class ControllerToolBox
 
     public static function createNew($createParams)
     {
+
         $createParams = isset( $createParams) ? $createParams : self::getBlankCreateParams();
 
         $context = $createParams["context"];
@@ -60,7 +65,7 @@ class ControllerToolBox
         $toolbox->requestParamsArr = $createParams;
 
         $tokenFacade = KTokenFacade::create($toolbox);
-
+        $messageMap = new KMessageCodeMap( $configs->getConfig("messageMap"));
 
 
         $serviceToolBox = \Service\ServiceToolBox::createToolBox($context,$configs);
@@ -74,6 +79,7 @@ class ControllerToolBox
             ,"requestParams"  => $createParams["requestParams"]
             ,"requestMethod"  => isset($createParams["requestMethod"]) ? $createParams["requestMethod"]:"GET"
             ,"tokenFacade"    => $tokenFacade
+            ,"messageMap"     => $messageMap
         ); 
 
         $result = new ControllerToolBox($param);
@@ -128,6 +134,14 @@ class ControllerToolBox
     public function getTokenFacade()
     {
         return $this->tokenFacade;
+    }
+
+    /**
+     * Get the value of messageMap
+     */ 
+    public function getMessageMap()
+    {
+        return $this->messageMap;
     }
 }
 ?>

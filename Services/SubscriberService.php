@@ -15,10 +15,20 @@ class SubscriberService extends AService implements IService
 {
     public function addSubscriberToList(FormedOutSubscriber $subscriberFromForm)
     {
-        $list_id = $subscriberFromForm->getListToAddId();
-       $storedSubscriber = $this->repository->getOrInsert($subscriberFromForm);
-       $result =   $this->repository->addSubscriberToList($storedSubscriber,$list_id);
-       return $result;
+
+        try
+        {
+            
+            $list_id = $subscriberFromForm->getListToAddId();
+            $storedSubscriber = $this->repository->getOrInsert($subscriberFromForm);
+            $result =   $this->repository->addSubscriberToList($storedSubscriber,$list_id);
+            return $result;
+        } 
+        catch (\Throwable $th) 
+        {
+            throw $th;
+        }
+
     }
 
     public function removeSubscriberToList(StoredSubscriber $subscriberFromForm)
