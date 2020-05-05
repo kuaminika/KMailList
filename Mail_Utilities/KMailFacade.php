@@ -64,7 +64,7 @@ class KMailFacade
     
         $sender = new KMailSender($toolbox);
     
-        $testFormat =  file_get_contents(dirname(__FILE__).'/templateFormats/test1.html');
+        $testFormat =  file_get_contents(dirname(__FILE__).'/templateFormats/welcomeLetter_en.html');
        $template = new KMailTemplate($purpose, $testFormat);
         //"kuaminika@gmail.com","Message from contact form","this is a test"
         $messageParams = ["sender"=>$storedMessage->getAuthorEmail()//"kuaminika@gmail.com"
