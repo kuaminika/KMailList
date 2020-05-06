@@ -40,13 +40,28 @@ class KTokenFacade
     public static function create(KTokenToolBox $toolbox = null)
     {
     
-        $toolbox = isset($toolbox)?$toolbox:$this->createToolBox();
+      $toolbox = isset($toolbox)?$toolbox:KTokenFacade::createToolBox();
       $providerCreator = new TokenProviderCreator($toolbox);
       $validatorCreator = new TokenValidaterCreator($toolbox);
 
       $result = new KTokenFacade($providerCreator->create(),$validatorCreator->create());
       return $result;
 
+    }
+
+
+    public function resolveCode($code)
+    {
+       $result =  $this->tokenValidator->resolveCode($code);
+       return $result;
+    }
+
+
+    public function createCode($model)
+    {
+        $str = $model->_toJson();
+        $arr = (array)json_decode( $str );
+        return $this->tokenProvider->createCode($arr);
     }
 
     public function validateToken()

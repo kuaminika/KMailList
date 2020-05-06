@@ -50,7 +50,13 @@ class KTokenValidator_JWT implements IkTokenValidator
 
     }
 
-
+    public function resolveCode($strCode)
+    {
+        echo "</br>about to resolve2";
+        $_KToken_JWTAnyEncrypt = new KToken_JWTAnyEncrypt($this->secretKey);
+        $result =  $_KToken_JWTAnyEncrypt->resolveCode($strCode);
+        return $result;
+    }
 
     public function validate()
     {    

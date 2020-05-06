@@ -18,6 +18,10 @@
         cursor: pointer;
       }
     </style>
+    <script>
+
+      var hostUrl = "https://vps.cybereq.com/KuaminikaWorkspace/heartmindequation.com/KMailList/API/index.php";
+    </script>
     <title>TEST_ KMAIL LIST</title>
 </head>
 <body>

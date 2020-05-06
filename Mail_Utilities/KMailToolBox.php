@@ -1,8 +1,10 @@
 <?php
 namespace Mail_utilities;
 
+require_once dirname(__DIR__)."/Security_Utilities/Token_Utilities/KTokenFacade.php";
 
 require_once dirname(__FILE__)."/../KConfigSet.php";
+use Security_Utilities\Token_Utilities\KTokenFacade;
 //require_once dirname(__FILE__)."/../Log_Utilities/ILogTool.php";
 class KMailToolBox
 {    
@@ -13,6 +15,7 @@ class KMailToolBox
     var $sourceHost;
     var $purposedEmails;
     var $purposedEmailSenders;
+    var $tokenFacade;
     function __construct($mailConfigs,$logTool)//$apiKey,$apiSecret,$projectName)
     {
        // $mailConfigs = $configs->getConfig("mailConfigs");
@@ -26,6 +29,9 @@ class KMailToolBox
         $this->purposedEmailSenders =$mailConfigSet->getConfig("purposedEmailAuthor");// $mailConfigs["purposedEmailAuthor"];
 
         $this->logTool = $logTool;// $configs->getConfig("currentLogTool");
+
+       // $tokenToolBox = KTokenFacade::createToolBox();
+        $this->tokenFacade =  KTokenFacade::create();
         
         $this->logTool->log("done constructing KMailToolBox");
     }
