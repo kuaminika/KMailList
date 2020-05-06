@@ -10,7 +10,7 @@ class KMailToolBox
     var $projectName;
     var $apisecret;
     var $logTool;
-
+    var $sourceHost;
     var $purposedEmails;
     var $purposedEmailSenders;
     function __construct($mailConfigs,$logTool)//$apiKey,$apiSecret,$projectName)
@@ -22,7 +22,7 @@ class KMailToolBox
         $this->projectName = $mailConfigSet->getConfig("projectName");//$mailConfigs["projectName"];
 
         $this->purposedEmails = $mailConfigSet->getConfig("purposedEmailConfigs");//$mailConfigs["purposedEmailConfigs"];
-
+        $this->sourceHost =  $mailConfigSet->getConfig("sourceHost");
         $this->purposedEmailSenders =$mailConfigSet->getConfig("purposedEmailAuthor");// $mailConfigs["purposedEmailAuthor"];
 
         $this->logTool = $logTool;// $configs->getConfig("currentLogTool");

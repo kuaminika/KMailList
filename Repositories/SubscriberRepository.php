@@ -71,7 +71,47 @@ class SubscriberRepository extends ARepository implements IRepository
         return $result;
     }
 
+/**
+ * returns array with the only the new member
+ */
+    public function addSubscriberToListBySelf($storedSubscriber,$listId)
+    {
+        $subscriberId = $storedSubscriber->getSubscriberId();
+        try{
 
+
+
+        $insertQuery = sprintf($this->_queryBoard["insertSubscriberToList"],$subscriberId,$listId);
+        $this->logTool->log($insertQuery);
+
+        $this->dbTool->runQuery($insertQuery);
+
+        $query =  $this->_queryBoard["selectSubscribersForList"]." WHERE m.list_id=".$listId." AND u.email = '".$storedSubscriber->getEmail()."'" ;
+    
+        $dbResultSet =  $this->dbTool->runQuery($query )->fetchAll();
+       $result =  $this->_convertResultSetToStoredTypeList("models\StoredSubscriber",$dbResultSet);
+       return $result;
+        }
+        catch(Exception $ex)
+        {
+           $ducplicateError = sprintf("Duplicate entry '%s' for key 'subscriber_id'",$subscriberId."-".$listId);
+           $itsDublicate =  strpos($ex->getMessage(), $ducplicateError) ;
+
+            if($itsDublicate)
+            {
+                $location = $this->getFunctionAddress("addSubscriberToList");
+                $this->logAndThrow("alreadyExists",$location);
+            }
+
+           echo $itsDublicate ? "its duplicate":"0";
+           echo $ex->getMessage();
+        }
+    }
+
+
+/**
+ * returns array with all members
+ */
     public function addSubscriberToList($storedSubscriber,$listId)
     {
 
@@ -248,7 +288,3 @@ class SubscriberRepository extends ARepository implements IRepository
 
     }
 }
-
-
-
-?>

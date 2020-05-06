@@ -13,6 +13,29 @@ require_once dirname(__FILE__)."/AService.php";
 class SubscriberService extends AService implements IService
 
 {
+
+
+
+    
+    public function addSubscriberToListBySelf(FormedOutSubscriber $subscriberFromForm)
+    {
+
+        try
+        {
+            
+            $list_id = $subscriberFromForm->getListToAddId();
+            $storedSubscriber = $this->repository->getOrInsert($subscriberFromForm);
+            $result =   $this->repository->addSubscriberToListBySelf($storedSubscriber,$list_id);
+            return $result;
+        } 
+        catch (\Throwable $th) 
+        {
+            throw $th;
+        }
+
+    }
+
+
     public function addSubscriberToList(FormedOutSubscriber $subscriberFromForm)
     {
 
