@@ -13,6 +13,9 @@ class KMailMessage implements IKMailMessage
     private  $template;
     private $recipientName;
     private $recipientEmail;
+    private $sourceHost;
+    private $recipientMembershipId;
+
 
     public function __construct($params,IKMailTemplate $template)
     {
@@ -20,6 +23,8 @@ class KMailMessage implements IKMailMessage
         $this->subject = $params["subject"];
         $this->template = $template;
         $this->content = $params["content"];
+        $this->sourceHost = $params["sourceHost"];
+        $this->recipientMembershipId = $params["membershipId"];
         $this->recipientName = $params["recipientName"];
         $this->recipientEmail = $params["recipientEmail"];
     }
@@ -80,6 +85,10 @@ class KMailMessage implements IKMailMessage
        $d = new \DateTime();
        $result = str_replace("##CONTENT##", $this->content, $this->template->getFormat());
        $result = str_replace("##RECIPIENT_NAME##", $this->getRecipientName(), $result);
+       $result = str_replace("##RECIPIENT_EMAIL##", $this->getRecipientEmail(), $result);
+       $result = str_replace("##SOURCE_HOST##", $this->sourceHost, $result);
+       $result = str_replace("##SENDER_EMAIL##", $this->sender, $result);
+       $result = str_replace("##MEMBERSHIP_ID##",$this->recipientMembershipId,$result );
        $result = str_replace("##DATE##", $d->format('Y-m-d'), $result);
 
       return  $result;

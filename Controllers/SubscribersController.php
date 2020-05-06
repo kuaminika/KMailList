@@ -65,13 +65,15 @@ class SubscribersController extends AController
             $formedOutSubscriberArgs = $itComesFromJSONForm ?(array) $formedOutSubscriberArgs["jsonValue"]: $formedOutSubscriberArgs ;
           
             $newSubscriber = new FormedOutSubscriber($formedOutSubscriberArgs);
-
-            $newList = $this->service->addSubscriberToList($newSubscriber);
+            $newList = $this->service->addSubscriberToListBySelf($newSubscriber);
+          
+            $storedSubscriber = $newList->getContents()[0];
 
             $language =  array_key_exists("language",$formedOutSubscriberArgs) ? $formedOutSubscriberArgs["language"] :"en";
             $kMailFacade = \Mail_utilities\KMailFacade::create();        
-            $purposedMail = $kMailFacade->getPurposedEmail("thanksForJoining",$language);        
-            $kMailFacade->thankForJoiningMailingList( $purposedMail, $newSubscriber );
+            $purposedMail = $kMailFacade->getPurposedEmail("thanksForJoining",$language);    
+            
+            $kMailFacade->thankForJoiningMailingList( $purposedMail, $storedSubscriber );
 
             $result = $this->messageMap->getCode("thanksForJoin");
             
@@ -103,12 +105,6 @@ class SubscribersController extends AController
 
           
             $newList = $this->service->addSubscriberToList($newSubscriber);
-
-          
-
-            $kMailFacade = \Mail_utilities\KMailFacade::create();        
-            $purposedMail = $kMailFacade->getPurposedEmail("thanksForJoining","fr");        
-            $kMailFacade->thankForJoiningMailingList( $purposedMail, $newSubscriber );
             
             $this->response['status_code_header'] = 'HTTP/1.1 200 OK';          
             $this->response['body'] =   $newList->_toJson();

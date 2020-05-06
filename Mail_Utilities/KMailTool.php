@@ -7,6 +7,7 @@ abstract class KMailTool
     var $apikey;
     var $projectName;
     var $apisecret;
+    var $sourceHost;
     protected $logTool;
     
     function __construct(KMailToolBox $toolBox)
@@ -15,6 +16,7 @@ abstract class KMailTool
         $this->apikey = $toolBox->apikey;
         $this->apisecret = $toolBox->apisecret;
         $this->projectName = $toolBox->projectName;
+        $this->sourceHost = $toolBox->sourceHost;
         $this->logTool = $toolBox->logTool;
         $this->logTool->log("done constructing kmailtool");
     }

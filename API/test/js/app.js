@@ -1,4 +1,4 @@
-kLib.APIMainCourrier.hostURL = "https://vps.cybereq.com/KuaminikaWorkspace/KMailList/API/index.php";
+kLib.APIMainCourrier.hostURL = hostURL;
 
 
 var app = app||{};

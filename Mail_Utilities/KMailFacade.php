@@ -6,12 +6,16 @@ require_once dirname(__FILE__)."/KMailToolBox.php";
 require_once dirname(__FILE__)."/KMailSender.php";
 require_once dirname(__FILE__)."/KMailTemplate.php";
 require_once dirname(__FILE__)."/KMailMessage.php";
+///var/www/html/KuaminikaWorkspace/heartmindequation.com/KMailList/Security_Utilities/Token_Utilities/KTokenFacade.php
 
+require_once dirname(__DIR__)."/Security_Utilities/Token_Utilities/KTokenFacade.php";
 require_once dirname(__FILE__)."/../Services/MessageService.php";
 require_once dirname(__FILE__)."/../Models/StoredMessage.php";
+require_once dirname(__FILE__)."/../Models/StoredSubscriber.php";
 
 use KConfigSet;
-use models\interfaces\ISubscriber;
+//use models\interfaces\ISubscriber;
+use Security_Utilities\Token_Utilities\KTokenFacade;
 use models\StoredMessage;
 use models\StoredSubscriber;
 class KMailFacade
@@ -56,24 +60,40 @@ class KMailFacade
         return $result;
     }
 
-    public function thankForJoiningMailingList(StoredMessage $storedMessage,ISubscriber $storedSubscriber)
+    public function thankForJoiningMailingList(StoredMessage $storedMessage,StoredSubscriber $storedSubscriber)
     {
-        $purpose = "Thank you";
+        try
+        {
 
-        $toolbox = $this->mailoolBox;
-    
-        $sender = new KMailSender($toolbox);
-    
-        $testFormat =  file_get_contents(dirname(__FILE__).'/templateFormats/test1.html');
-       $template = new KMailTemplate($purpose, $testFormat);
-        //"kuaminika@gmail.com","Message from contact form","this is a test"
-        $messageParams = ["sender"=>$storedMessage->getAuthorEmail()//"kuaminika@gmail.com"
-                         ,"subject"=>$storedMessage->getTitle()//"Welcome to the equattion"
-                         ,"content"=>$storedMessage->getContent()//'Thank you for joining. You will now be notified as to when new content is generated from <b><a href="http://www.heartmindequation.com">our site</a></b>'
-                         ,"recipientName"=>$storedSubscriber->getName()
-                         ,"recipientEmail"=>$storedSubscriber->getEmail() ];
-        $message = new KMailMessage($messageParams,$template);
-        $sender->sendEMail([["Email"=>$storedSubscriber->getEmail(),"Name"=>$storedSubscriber->getName()]],$message);
+           
+            $purpose = "Thank you";
+
+            $toolbox = $this->mailoolBox;
+        
+            $sender = new KMailSender($toolbox);
+        
+            $testFormat =  file_get_contents(dirname(__FILE__).'/templateFormats/welcomeLetter_en.html');
+            $template = new KMailTemplate($purpose, $testFormat);
+            $tokenFacade = KTokenFacade::create();
+            $code = $tokenFacade->createCode($storedSubscriber);
+            
+            //"kuaminika@gmail.com","Message from contact form","this is a test"
+            $messageParams = ["sender"=>$storedMessage->getAuthorEmail()//"kuaminika@gmail.com"
+                            ,"subject"=>$storedMessage->getTitle()//"Welcome to the equattion"
+                            ,"content"=>$storedMessage->getContent()//'Thank you for joining. You will now be notified as to when new content is generated from <b><a href="http://www.heartmindequation.com">our site</a></b>'
+                            ,"recipientName"=>$storedSubscriber->getName()
+                            ,"recipientEmail"=>$storedSubscriber->getEmail() 
+                            ,"membershipId"=>$code//$storedSubscriber->getMembershipId()
+                            ,"sourceHost"=> $toolbox->sourceHost
+                        ];
+        
+            $message = new KMailMessage($messageParams,$template);
+            $sender->sendEMail([["Email"=>$storedSubscriber->getEmail(),"Name"=>$storedSubscriber->getName()]],$message);
+        }
+        catch(\Exception $ex)
+        {
+            echo $ex->getMessage();
+        }
     
     }
 
