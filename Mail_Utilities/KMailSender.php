@@ -22,7 +22,7 @@ class KMailSender extends KMailTool
             'Subject'    => $message->getSubject()." - ".$message->getPurpose(),            
             'Text-part'  => $message->textPart(),
             'Html-part'  => $message->getContent(),            
-            'Recipients' => $recipientList_array
+            'Recipients' =>(array) $recipientList_array
             
         ];
         $this->logTool->log("body created");

@@ -7,7 +7,7 @@ namespace SETUP{
 
     require_once "ExtraSetUpCommand.php";
 
-    require_once "../Log_Utilities/DBTableLogTool.php";
+    require_once dirname(__DIR__)."/Log_Utilities/DBTableLogTool.php";
     use Exception;
     use Log_Utilities\DBTableLogTool;
     use SETUP\ExtraSetUpCommand;

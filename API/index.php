@@ -1,8 +1,9 @@
 <?php
+/*
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ALL);*/
 require_once dirname(__FILE__)."/../K_Utilities/KIgniter.php";
 require_once dirname(__FILE__)."/../Controllers/_requireAll.php";
 
@@ -20,7 +21,7 @@ $uri = explode( '/', $uri );
 
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 
-\K_Utilities\KIgniter::Ignite();
+//\K_Utilities\KIgniter::Ignite();
 
 
 
@@ -48,12 +49,23 @@ unset($requestParams["context"]);
 unset($requestParams["requestAction"]);
 
 $controllerName ="\\Controllers\\". $request["context"]."sController";
+
 $controllerExists = class_exists($controllerName);
 if(!$controllerExists)
 {
 
     header("HTTP/1.1 404  Not Found");
     exit();
+}
+\K_Utilities\KIgniter::Ignite();
+$setUpControllerName = "SetUp";
+$setUpControllerCalled = strstr($controllerName,$setUpControllerName );
+
+if($setUpControllerCalled)
+{
+    echo "set up controller is called ";
+    echo $controllerName;
+    die;
 }
 
 // \Controllers\PublishersController

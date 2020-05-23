@@ -88,7 +88,7 @@ class KMailFacade
                         ];
         
             $message = new KMailMessage($messageParams,$template);
-            $sender->sendEMail([["Email"=>$storedSubscriber->getEmail(),"Name"=>$storedSubscriber->getName()]],$message);
+            $sender->sendEMail([["Email"=>$storedSubscriber->getEmail(),"Name"=> $storedSubscriber->getName()]], $message);
         }
         catch(\Exception $ex)
         {
