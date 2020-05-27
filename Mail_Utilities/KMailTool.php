@@ -11,8 +11,7 @@ abstract class KMailTool
     protected $logTool;
     
     function __construct(KMailToolBox $toolBox)
-    {
-  
+    {  
         $this->apikey = $toolBox->apikey;
         $this->apisecret = $toolBox->apisecret;
         $this->projectName = $toolBox->projectName;
@@ -24,9 +23,7 @@ abstract class KMailTool
     function showDataPretty($data)    
     {     
         $this->logTool->log("supposed to get some");
-        $this->logTool->showObj($data);
-
-       // echo '<pre>' . var_export($data, true) . '</pre>';               
+        $this->logTool->showObj($data);            
     }
 }
 

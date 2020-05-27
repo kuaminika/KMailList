@@ -6,7 +6,7 @@ require_once dirname(__FILE__)."/KMailToolBox.php";
 require_once dirname(__FILE__)."/KMailSender.php";
 require_once dirname(__FILE__)."/KMailTemplate.php";
 require_once dirname(__FILE__)."/KMailMessage.php";
-///var/www/html/KuaminikaWorkspace/heartmindequation.com/KMailList/Security_Utilities/Token_Utilities/KTokenFacade.php
+require_once dirname(__FILE__)."/ExtendedKMailMessage.php";
 
 require_once dirname(__DIR__)."/Security_Utilities/Token_Utilities/KTokenFacade.php";
 require_once dirname(__FILE__)."/../Services/MessageService.php";
@@ -16,6 +16,8 @@ require_once dirname(__FILE__)."/../Models/StoredSubscriber.php";
 use KConfigSet;
 //use models\interfaces\ISubscriber;
 use Security_Utilities\Token_Utilities\KTokenFacade;
+use models\StoredPublisher;
+use models\ContactFormSubmission;
 use models\StoredMessage;
 use models\StoredSubscriber;
 class KMailFacade
@@ -23,7 +25,7 @@ class KMailFacade
    //private $messageService;
     private $mailoolBox;
 
-    private function __construct(KMailToolBox $mailToolBox)//MessageService $messageService)
+    private function __construct(KMailToolBox $mailToolBox)
     {
        $this->mailoolBox = $mailToolBox;
 
@@ -59,6 +61,79 @@ class KMailFacade
 
         return $result;
     }
+
+
+    public function sendContactFormEmailToRecipient(ContactFormSubmission $cfSubmission)
+    {
+        try
+        {
+            $recipient =  $cfSubmission->getRecipient();
+            $purpose = "youReceivedFromContactForm";
+            
+            if(!$recipient)
+            {
+                $args = $this->mailoolBox->mainRecipientPublisher;
+                $recipient = new StoredPublisher(["name"=>$args["Name"],"email"=>$args["Email"]]);
+                $cfSubmission->setRecipient($recipient);
+            }
+            
+            $messageFromForm =  $cfSubmission->getMessage();
+            $contactFormSender = $cfSubmission->getSender();
+            $toolbox = $this->mailoolBox;
+            $storedMessage =$this->getPurposedEmail($purpose);
+            $mailSender = new KMailSender($toolbox);
+            $testFormat =  file_get_contents(dirname(__FILE__).'/templateFormats/'.$purpose.'_en.html');
+            $tokenFacade = KTokenFacade::create();
+            $code = $tokenFacade->createCode($contactFormSender);
+            
+            $template = new KMailTemplate("Heart mind equation", $testFormat);
+            
+            $toolbox->logTool->log("the following is the message from the form");
+            $toolbox->logTool->showVDump($messageFromForm);
+
+            
+
+            $messageParams = ["sender"=>$contactFormSender->getEmail()
+                            ,"subject"=>$storedMessage->getTitle() // 
+                            ,"content"=>$storedMessage->getContent()
+                            ,"payLoad"=>$cfSubmission->getContent()
+                            ,"recipientName"=>$recipient->getName()
+                            ,"recipientEmail"=>$recipient->getEmail() 
+                            ,"membershipId"=>$code//$storedSubscriber->getMembershipId()
+                            ,"sourceHost"=> $toolbox->sourceHost
+                        ];
+
+          
+            
+            
+          //  $toolbox->logTool->log("the following is the message params");
+          //  $toolbox->logTool->showVDump($messageParams);
+
+            
+            $message = new ExtendedKMailMessage($messageParams,$template);
+
+            $finalRecipientList =  array_merge( $toolbox->itRecipientList,[ $this->mailoolBox->mainRecipientPublisher]);
+            $status = $mailSender->sendEMail($finalRecipientList , $message);
+            
+            $statusIsGood =isset($status->Messages);
+            if(!$statusIsGood)
+            {
+                throw new \Exception("Mezanmi, ket, the '".$purpose ."' message failed check log to get more details");
+            }
+               
+            
+            return $status;
+        }
+        catch(Exception $ex)
+        {
+
+            $this->mailoolBox->logTool->showVDump($ex);
+            throw $ex;
+        }
+        
+    }
+
+
 
     public function thankForJoiningMailingList(StoredMessage $storedMessage,StoredSubscriber $storedSubscriber)
     {

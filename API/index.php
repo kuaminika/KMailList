@@ -27,8 +27,6 @@ $requestMethod = $_SERVER["REQUEST_METHOD"];
 
 $request =$_REQUEST;
 
-
-
 if( !array_key_exists("context",$request))
 {
     header("HTTP/1.1 404 Not Found");
