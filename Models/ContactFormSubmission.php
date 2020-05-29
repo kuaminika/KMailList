@@ -66,9 +66,9 @@ class ContactFormSubmission extends AModel
         $result = "{";
 
         $result.="'message':'". $this->message->_toJson()."'";
-        $result.="',sender':'". $this->subscriberSender->_toJson()."'";
-        $result.=$this->recipientPublisher ? "',recipient':'". $this->recipientPublisher->_toJson()."'": "";
-        $result.="',otherAttributes':'".\json_encode($this->otherAttributes)."'";
+        $result.=",'sender':'". $this->subscriberSender->_toJson()."'";
+        $result.=$this->recipientPublisher ? ",'recipient':'". $this->recipientPublisher->_toJson()."'": "";
+        $result.=",'otherAttributes':'".\json_encode($this->otherAttributes)."'";
         $result .= "}";
         return $result;
     }

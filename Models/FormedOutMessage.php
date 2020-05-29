@@ -35,7 +35,7 @@ namespace models
        */
       public function getLastUpdateDate()
       {
-         return $this->lastUpdateDate;
+         return  $this->lastUpdateDate->format('Y-m-d\ H:i:s.u');;
       }
 
       /**
@@ -49,10 +49,6 @@ namespace models
 
          return $this;
       }
-
-
-
-
 
       /**
        * Get the value of author
