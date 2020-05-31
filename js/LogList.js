@@ -26,7 +26,10 @@ class LogList extends React.Component
     {
         let rows = [];
         this.state.logItems.forEach(item=>{
-            rows.push(e("div",{children:item.LOG_CONTENT,className:" list-group-item"}))
+            let rowInfo =e("small",{children:item.LOG_DATE,className:" "});
+            let rowDetail =e("div",{children:item.LOG_CONTENT,className:" "});
+            let rowItem =e("div",{className:" list-group-item align-items-start"},[rowInfo,rowDetail]);
+            rows.push(rowItem)
 
         });
 
