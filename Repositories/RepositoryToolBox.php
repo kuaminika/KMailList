@@ -23,36 +23,19 @@ namespace Repository;
 
         public static function createToolBox($configs = null)
         { 
-      /*      
-        global $globalSettings,$dbSetUpConfigs; 
+          $configs = isset($configs)? $configs: \KConfigSet::getCurrentConfigs(); 
+          $dbTool= $configs->getConfig("currentDbTool");
+          $logTool  = $configs->getConfig("currentLogTool");
 
-        echo "<h2>test find all:</h2>";
-
-        $servername = $dbSetUpConfigs["servername"];
-        $username =  $dbSetUpConfigs["username"];
-        $password=  $dbSetUpConfigs["password"];
-        $dbname =  $dbSetUpConfigs["dbname"];         
-
-                    
-        $settings = $globalSettings;
-        $dbTool =  new \DB_Utilities\MYSQL_DBTool($servername,$username,$password,$dbname);
-       
-       $logTool  = \Log_Utilities\LogToolCreator::getCreateLogFn("echo")();
-
-        $logTool->log("hihi im here :)");*/
-        $configs = isset($configs)? $configs: \KConfigSet::getCurrentConfigs(); 
-        $dbTool= $configs->getConfig("currentDbTool");
-        $logTool  = $configs->getConfig("currentLogTool");
-
-        $params = [];
-        $params["dbTool"]=$dbTool;
-        $params["configSet"]=$configs;
-        $params["logTool"]=$logTool;
+          $params = [];
+          $params["dbTool"]=$dbTool;
+          $params["configSet"]=$configs;
+          $params["logTool"]=$logTool;
 
 
-        
-        $toolBox = new RepositoryToolBox($params);//$dbTool,$configs,$logTool);
-        return $toolBox;
+          
+          $toolBox = new RepositoryToolBox($params);//$dbTool,$configs,$logTool);
+          return $toolBox;
         }
    }
 

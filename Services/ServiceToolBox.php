@@ -26,7 +26,7 @@ class ServiceToolBox{
         $configs = isset($configs)? $configs: \KConfigSet::getCurrentConfigs(); 
         $repositoryClassName = "\\Repository\\".$context."Repository";
   
-        $logTool  = $configs->getConfig("currentLogTool");//\Log_Utilities\LogToolCreator::getCreateLogFn("echo")();
+        $logTool  = $configs->getConfig("currentLogTool");
         $logTool->log("hihi im here :)");
         $dbTool= $configs->getConfig("currentDbTool");
         $params = [];

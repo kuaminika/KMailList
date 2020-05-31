@@ -38,7 +38,7 @@ class MessagesController extends AController
            $this->response['status_code_header'] = 'HTTP/1.1 200 OK';
            $this->response['body'] =  $error->_toJson();
         }
-        catch(Exception $ex)
+        catch(\Exception $ex)
         {
             $this->logTool->log("exception is caught");
           $this->logAndSend("exception","addSubscriberToList",$ex->getMessage());

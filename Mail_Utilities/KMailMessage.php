@@ -17,19 +17,39 @@ class KMailMessage implements IKMailMessage
     private $recipientMembershipId;
     private $payLoad;
 
-
+    private $params;
     public function __construct($params,IKMailTemplate $template)
     {
-        $this->sender = $params["sender"];
-        $this->subject = $params["subject"];
+
+        $this->params = $params;
+        $this->sender = $this->getValueOf("sender");
+        $this->subject = $this->getValueOf("subject");
         $this->template = $template;
-        $this->content = $params["content"];
-        $this->sourceHost = $params["sourceHost"];
-        $this->recipientMembershipId = $params["membershipId"];
-        $this->recipientName = $params["recipientName"];
-        $this->payLoad = $params["payLoad"];
-        $this->recipientEmail = $params["recipientEmail"];
+        $this->content = $this->getValueOf("content");
+        $this->sourceHost = $this->getValueOf("sourceHost");
+        $this->recipientMembershipId = $this->getValueOf("membershipId");
+        $this->recipientName = $this->getValueOf("recipientName");
+        $this->payLoad = $this->getValueOf("payLoad");
+        $this->recipientEmail = $this->getValueOf("recipientEmail");
     }
+
+
+
+    private function getValueOf($arg)
+    {
+        $requiredArgs = ["sender,recipientEmail"];     
+
+        $itsProvided =  key_exists($arg,$this->params);
+        if(!$itsProvided && in_array($arg, $requiredArgs))
+        {
+            throw new \Exception($arg." is required.");
+        }
+
+        return "";
+    }
+
+
+
 
    public function textPart()
    {

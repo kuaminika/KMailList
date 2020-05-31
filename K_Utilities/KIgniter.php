@@ -27,12 +27,13 @@ class KIgniter
         $dbTool =  new \DB_Utilities\MYSQL_DBTool($servername,$username,$password,$dbname);
     
         $dbTool->connectToDB();
-        $logTool  = \Log_Utilities\LogToolCreator::getCreateLogFn("db")($dbTool,$settings);
+        $currentDBLogTool  = \Log_Utilities\LogToolCreator::getCreateLogFn("db")($dbTool,$settings);
 
-        $logTool->log("hihi im here :)");
+        $currentDBLogTool->log("hihi im here :)");
         $configs =  \KConfigSet::createNewConfigs($settings );
 
-        $configs->addConfig("currentLogTool",$logTool);
+        $configs->addConfig("currentLogTool",$currentDBLogTool);
+        $configs->addConfig("currentDBLogTool",$currentDBLogTool);
         $configs->addConfig("currentDbTool",$dbTool);
     }
 

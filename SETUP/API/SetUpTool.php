@@ -5,13 +5,22 @@ namespace APISetUpTools;
 class SetUpTool
 {
 
-    private $logTool;
+    public $dbTool;
+    private $echoLogTool;
+    public $dbLogTool;
 
     public function __construct()
     {
 
+        $configs = isset($configs)? $configs: \KConfigSet::getCurrentConfigs(); 
+       $this->dbTool =  $configs->getConfig("currentDbTool");
+       $this->dbLogTool = $configs->getConfig("currentDBLogTool");
+      
     }
 
-
-   // public 
+    public function getEchoLogTool()
+    {
+        $this->echoLogTool =\Log_Utilities\LogToolCreator::getCreateLogFn("echo")();
+        return $this->echoLogTool;
+    }
 }

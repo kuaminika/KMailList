@@ -6,8 +6,6 @@ namespace APISetUpTools;
 class LaunchSetUpCommand extends ASetUpToolCommand
 {
 
-    protected $tool;
-
 
     public function __construct(SetUpTool $tool)
     {
@@ -58,7 +56,7 @@ class LaunchSetUpCommand extends ASetUpToolCommand
                 $builder->addSetup("AddMessagesTable");
                 $builder->getCommand()->runSetUp();
             }
-            catch(Exception  $e)
+            catch(\Exception  $e)
             {
                 $logTool_main->showObj($e);
             }
