@@ -18,21 +18,20 @@ class KMailToolBox
     var $tokenFacade;
     var $mainRecipientPublisher;
     var $itRecipientList;
-    function __construct($mailConfigs,$logTool)//$apiKey,$apiSecret,$projectName)
+    function __construct($mailConfigs,$logTool)
     {
-       // $mailConfigs = $configs->getConfig("mailConfigs");
+       
         $mailConfigSet = \KConfigSet::createLocalConfigSet($mailConfigs);
-        $this->apikey = $mailConfigSet->getConfig("apiKey");// $mailConfigs ["apiKey"];
-        $this->apisecret = $mailConfigSet->getConfig("apiSecret");//$mailConfigs["apiSecret"];
-        $this->projectName = $mailConfigSet->getConfig("projectName");//$mailConfigs["projectName"];
+        $this->apikey = $mailConfigSet->getConfig("apiKey");
+        $this->apisecret = $mailConfigSet->getConfig("apiSecret");
+        $this->projectName = $mailConfigSet->getConfig("projectName");
         $this->mainRecipientPublisher = $mailConfigSet->getConfig("businessRecipientList")[0];
-        $this->purposedEmails = $mailConfigSet->getConfig("purposedEmailConfigs");//$mailConfigs["purposedEmailConfigs"];
+        $this->purposedEmails = $mailConfigSet->getConfig("purposedEmailConfigs");
         $this->sourceHost =  $mailConfigSet->getConfig("sourceHost");
-        $this->purposedEmailSenders =$mailConfigSet->getConfig("purposedEmailAuthor");// $mailConfigs["purposedEmailAuthor"];
+        $this->purposedEmailSenders =$mailConfigSet->getConfig("purposedEmailAuthor");
         $this->itRecipientList = $mailConfigSet->getConfig("itRecipientList");
-        $this->logTool = $logTool;// $configs->getConfig("currentLogTool");
+        $this->logTool = $logTool;
 
-       // $tokenToolBox = KTokenFacade::createToolBox();
         $this->tokenFacade =  KTokenFacade::create();
         
         $this->logTool->log("done constructing KMailToolBox");

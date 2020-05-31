@@ -52,6 +52,10 @@ class KMailFacade
                             "sent_date"=>"n/a"
                             ];
         
+
+        $this->mailoolBox->logTool->showVDump( $this->mailoolBox->purposedEmails);
+        $this->mailoolBox->logTool->log("these were the purposed");
+        
         $purosedEMailarr= array_merge($purosedEMailarr, $this->mailoolBox->purposedEmails[$finalKey]);
         $purosedEMailarr = array_merge($purosedEMailarr, $this->mailoolBox->purposedEmailSenders[$key]);
 
@@ -106,8 +110,8 @@ class KMailFacade
           
             
             
-          //  $toolbox->logTool->log("the following is the message params");
-          //  $toolbox->logTool->showVDump($messageParams);
+            $toolbox->logTool->log("the following is the message params");
+            $toolbox->logTool->showVDump($messageParams);
 
             
             $message = new ExtendedKMailMessage($messageParams,$template);
@@ -115,6 +119,11 @@ class KMailFacade
             $finalRecipientList =  array_merge( $toolbox->itRecipientList,[ $this->mailoolBox->mainRecipientPublisher]);
             $status = $mailSender->sendEMail($finalRecipientList , $message);
             
+            $toolbox->logTool->showVDump($status);
+            $toolbox->logTool->log("<h1>---------------the staus</h1>");
+
+
+
             $statusIsGood =isset($status->Messages);
             if(!$statusIsGood)
             {
@@ -122,7 +131,7 @@ class KMailFacade
             }
                
             
-            return $status;
+            return 1;// $status;
         }
         catch(\Exception $ex)
         {

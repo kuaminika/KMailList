@@ -4,6 +4,18 @@ namespace models{
 abstract class AModel{
 
 
+        protected $requiredArgs = [];
+
+        protected function getValueFromArg($arg,$params)
+        {
+            $itsInThere = key_exists($arg,$params);
+            if(!$itsInThere && in_array($arg, $this->requiredArgs))
+            {
+                throw new \Exception($arg." is required.");
+            }
+            return "";
+        }
+
         /**
          * 
          * inspired from this:
