@@ -124,7 +124,7 @@ class KMailFacade
             
             return $status;
         }
-        catch(Exception $ex)
+        catch(\Exception $ex)
         {
 
             $this->mailoolBox->logTool->showVDump($ex);
