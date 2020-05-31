@@ -21,7 +21,7 @@ $uri = explode( '/', $uri );
 
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 
-//\K_Utilities\KIgniter::Ignite();
+
 
 
 

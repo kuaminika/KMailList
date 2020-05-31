@@ -6,6 +6,7 @@ namespace APISetUpTools;
 abstract class ASetUpToolCommand
 {
 
+    public  $toolName = "SetUpTool";
     protected $tool;
 
 

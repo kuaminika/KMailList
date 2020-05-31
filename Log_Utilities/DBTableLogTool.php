@@ -26,6 +26,11 @@ require_once "ILogTool.php";
 
     }
 
+    public function getLogTableName()
+    {
+        return $this->logTableName;
+    }
+
     public function logWithTab($str)
     {
         $this->writeInDB(  "--->"."-".$this->name.":". $str); 

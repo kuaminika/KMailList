@@ -13,29 +13,51 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 
-echo "setup api reahced";
 
 require_once dirname(__DIR__)."/../Log_Utilities/require_all.php";
 require_once dirname(__FILE__)."/require_all.php";
 
+$kApiTool = new \K_Utilities\K_APITool();
+\K_Utilities\KIgniter::Ignite();
 $namespace = "\\". "APISetUpTools";
 
-$className = "LaunchSetUpCommand";
+$configs = isset($configs)? $configs: \KConfigSet::getCurrentConfigs(); 
+   
+
+
+$logTool =   $configs->getConfig("currentDBLogTool");// Log_Utilities\LogToolCreator::getCreateLogFn("echo")();
+
+$logTool->log("about to instanciate:". $namespace );
+
+//showVDump
+$logTool->log($kApiTool->getRequestMethod());
+
+$logTool->showVDump($kApiTool->getRequestParams());
+
+$requestCommandKeyName = "context";
+$request = $kApiTool->getRequestParams();
+//LaunchSetU
+$commandGiven =   key_exists($requestCommandKeyName,$request);
+
+$defaultCommand = "LaunchSetUp";
+
+$commandToExecute = $commandGiven ? $request[$requestCommandKeyName]: $defaultCommand;
+
+
+$className = $commandToExecute."Command";
 $toolClassName = "SetUpTool";
 $path = $namespace ."\\".$className;
 $pathOfTool =  $namespace ."\\". $toolClassName;
 
-$logTool = Log_Utilities\LogToolCreator::getCreateLogFn("echo")();
+$logTool->log("about to instanciate:". $pathOfTool );
 
 
-echo $namespace;
 $logTool->log("about to instanciate:". $pathOfTool );
 
 $tool = new $pathOfTool();
 $logTool->log("instanciated ". $pathOfTool) ;
 
 
-$instance = new $path($tool);
-$logTool->log( "instanciated ". $path) ;
+$command = new $path($tool);
 
-$instance->execute();
+$command->execute();
