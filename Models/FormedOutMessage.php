@@ -9,7 +9,7 @@ namespace models
  {     
  
     private $title;
-    private $author;
+    private $author; // string
     private $content;
     private $lastUpdateDate;
    
@@ -20,7 +20,8 @@ namespace models
           $this-> title= $raw["title"];
           $this-> author =  $raw["author"];
           $this-> content = $raw["content"];
-          $this-> lastUpdateDate = $raw["lastUpdateDate"];
+
+          $this-> lastUpdateDate =\key_exists("lastUpdateDate",$raw)? $raw["lastUpdateDate"] : $this->getDateSent();
     }
 
 
@@ -34,7 +35,7 @@ namespace models
        */
       public function getLastUpdateDate()
       {
-         return $this->lastUpdateDate;
+         return  $this->lastUpdateDate->format('Y-m-d\ H:i:s.u');;
       }
 
       /**
@@ -48,10 +49,6 @@ namespace models
 
          return $this;
       }
-
-
-
-
 
       /**
        * Get the value of author

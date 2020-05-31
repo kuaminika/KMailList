@@ -1,15 +1,11 @@
 <?php
 
-namespace SETUP
-{
+namespace SETUP;
     
-require_once "./AddUsersTableCommand.php";
-require_once "./AddPublishersTable.php";
-require_once "./AddListTable.php";
-require_once "./AddMessagesTable.php";
-require_once "./AddSubscribersTable.php";
-require_once "./AddSubscriberListTable.php";
-require_once "./SetUpLogTool.php";
-}
-
-?>
+require_once dirname(__FILE__)."/AddUsersTableCommand.php";
+require_once dirname(__FILE__)."/AddPublishersTable.php";
+require_once dirname(__FILE__)."/AddListTable.php";
+require_once dirname(__FILE__)."/AddMessagesTable.php";
+require_once dirname(__FILE__)."/AddSubscribersTable.php";
+require_once dirname(__FILE__)."/AddSubscriberListTable.php";
+require_once dirname(__FILE__)."/SetUpLogTool.php";

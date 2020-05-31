@@ -78,7 +78,7 @@ class SubscribersController extends AController
             $result = $this->messageMap->getCode("thanksForJoin");
             
             $this->response['status_code_header'] = 'HTTP/1.1 200 OK';          
-            $this->response['body'] =  json_encode($result);
+            $this->response['body'] =  json_encode((array)$result);
         }
         catch(\K_Utilities\KException $ex)
         {

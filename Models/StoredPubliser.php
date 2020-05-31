@@ -14,9 +14,9 @@ namespace models
 
     public function __construct($raw)
     {    
-          $raw["id"] =  $raw["user_id"];
-       parent::__construct($raw);
-          $this->publisherId = $raw["publisherId"];
+        $raw["id"] = \key_exists("user_id",$raw)? $raw["user_id"] :0;
+        parent::__construct($raw);
+        $this->publisherId = \key_exists("publisherId",$raw)?  $raw["publisherId"]:0;
        
     }
 

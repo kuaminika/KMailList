@@ -16,6 +16,8 @@ class KMailToolBox
     var $purposedEmails;
     var $purposedEmailSenders;
     var $tokenFacade;
+    var $mainRecipientPublisher;
+    var $itRecipientList;
     function __construct($mailConfigs,$logTool)//$apiKey,$apiSecret,$projectName)
     {
        // $mailConfigs = $configs->getConfig("mailConfigs");
@@ -23,11 +25,11 @@ class KMailToolBox
         $this->apikey = $mailConfigSet->getConfig("apiKey");// $mailConfigs ["apiKey"];
         $this->apisecret = $mailConfigSet->getConfig("apiSecret");//$mailConfigs["apiSecret"];
         $this->projectName = $mailConfigSet->getConfig("projectName");//$mailConfigs["projectName"];
-
+        $this->mainRecipientPublisher = $mailConfigSet->getConfig("businessRecipientList")[0];
         $this->purposedEmails = $mailConfigSet->getConfig("purposedEmailConfigs");//$mailConfigs["purposedEmailConfigs"];
         $this->sourceHost =  $mailConfigSet->getConfig("sourceHost");
         $this->purposedEmailSenders =$mailConfigSet->getConfig("purposedEmailAuthor");// $mailConfigs["purposedEmailAuthor"];
-
+        $this->itRecipientList = $mailConfigSet->getConfig("itRecipientList");
         $this->logTool = $logTool;// $configs->getConfig("currentLogTool");
 
        // $tokenToolBox = KTokenFacade::createToolBox();

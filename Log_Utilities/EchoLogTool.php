@@ -40,6 +40,14 @@ namespace Log_Utilities{
 
     }
 
+    public function showVDump($obj)
+    {
+        ob_start();
+        var_dump($obj);
+        $result = ob_get_clean();
+
+        $this->log($result);
+    }
 
 
  }

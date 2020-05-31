@@ -67,11 +67,7 @@ abstract class AController
     {
         try 
         {
-          $params = $this->params;
-
-
-      //    $this->kTokenFacade->validateToken();  
-        
+          $params = $this->params;        
           call_user_func_array(array($this, $this->requestAction), [$params]);
   
           header($this->response['status_code_header']);

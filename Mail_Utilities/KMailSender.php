@@ -1,10 +1,9 @@
 <?php
 
 namespace Mail_utilities;
-require_once dirname(__FILE__)."/../VendorUtilities/mailjet/vendor/autoload.php";
 require_once dirname(__FILE__)."/KMailTool.php";
 
-use Mailjet\Resources;
+
 
 class KMailSender extends KMailTool
 {    
@@ -15,29 +14,36 @@ class KMailSender extends KMailTool
         $this->logTool->showObj($recipientList_array);
 
        $this->logTool->log("body bout to be created");
-        $body =	[
-            
-            'FromEmail'  => $sender_Email,            
-            'FromName'   => $this->projectName,            
+        $body =	[[
+            'From' =>["Email"=>$sender_Email,"Name"=>$this->projectName],        
+            'To' => $recipientList_array,
             'Subject'    => $message->getSubject()." - ".$message->getPurpose(),            
-            'Text-part'  => $message->textPart(),
-            'Html-part'  => $message->getContent(),            
-            'Recipients' => $recipientList_array
+            'TextPart'  => $message->textPart(),
+            'HTMLPart'  => $message->getContent()
             
-        ];
+        ]];
         $this->logTool->log("body created");
         $this->logTool->showObj($body);
-       // KLog::Create()->logArrayAsJSON($body);
         
-        $mj = new \Mailjet\Client($this->apikey, $this->apisecret);
+        $ch = curl_init();
         
-        $response = $mj->post(Resources::$Email, ['body' => $body]);
-        
-        $response->success() && $this->showDataPretty($response->getData());
-     //  KLog::Create()->logArrayAsJSON( (array)$response->getStatus());
-        
-        $this->logTool->showObj( (array)$response->getStatus());
-     
+        curl_setopt($ch, CURLOPT_URL, "https://api.mailjet.com/v3.1/send");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["Messages"=>$body]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+            'Content-Type: application/json')
+        );
+        curl_setopt($ch, CURLOPT_USERPWD,$this->apikey.":". $this->apisecret);
+        $server_output = curl_exec($ch);
+        curl_close ($ch);
+
+
+        $response = json_decode($server_output);
+       // $this->logTool->showObj(isset($response->Messages));
+    
+        $this->logTool->showObj( $response);
+        return $response;
     }
 
 }

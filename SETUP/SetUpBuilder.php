@@ -5,8 +5,8 @@ namespace SETUP
 
 use Exception;
 
-require_once "./ExtraSetUpCommand.php";
-require_once "./RequireAllCommands.php";
+require_once dirname(__FILE__)."/ExtraSetUpCommand.php";
+require_once dirname(__FILE__)."/RequireAllCommands.php";
 
     class SetUpBuilder
     {
