@@ -19,7 +19,7 @@ class LogRepository extends SetUpTool
 
     public function getAllLogs()
     {
-       $query =  "SELECT * FROM `".$this->logTableName."`";
+       $query =  "SELECT * FROM `".$this->logTableName."` ORDER BY id DESC";
        $dbResultSet =   $this->dbTool->runQuery($query)->fetchAll();
        return $dbResultSet;
 

@@ -16,7 +16,7 @@ class ListMembersSet extends  React.Component
     }
     componentDidMount() 
     {
-      fetch(this.props.findURL)//("API/index.php?context=Subscriber&requestAction=findAll")
+      fetch(this.props.findURL)
         .then(response => response.json())
         .then(memberLists => {
           let map = {};
@@ -28,29 +28,12 @@ class ListMembersSet extends  React.Component
       
       });
     }
-/*
-    loadMembersForList(listId)
-    {
-        this.props.findURL = "API/index.php?context=Subscriber&requestAction=getSubscribersInList&list_id="+listId;
-        fetch(this.props.findURL)//("API/index.php?context=Subscriber&requestAction=findAll")
-        .then(response => response.json())
-        .then(memberLists => {
-          let map = {};
-          memberLists = memberLists;
-          
-          memberLists.forEach(element=>map[element.id] = element );
-          
-          this.setState({memberLists:memberLists, map:map});
-      
-      });
-    }*/
 
-    componentDidUpdate(prevProps) {
 
-        
+    componentDidUpdate(prevProps) {        
         if(this.props.findURL===prevProps.findURL) return;
         this.state.listId = this.props.listId||999;
-        fetch(this.props.findURL)//("API/index.php?context=Subscriber&requestAction=findAll")
+        fetch(this.props.findURL)
         .then(response => response.json())
         .then(this.updateMemberList.bind(this));
     }
