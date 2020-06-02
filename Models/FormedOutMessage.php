@@ -17,9 +17,9 @@ namespace models
     public function __construct($raw)
     {     
   
-          $this-> title= $raw["title"];
-          $this-> author =  $raw["author"];
-          $this-> content = $raw["content"];
+          $this-> title= $this->getValueFromArg("title",$raw);//$raw["title"];
+          $this-> author = $this->getValueFromArg("author",$raw);//  $raw["author"];
+          $this-> content = $this->getValueFromArg("content",$raw);// $raw["content"];
 
           $this-> lastUpdateDate =\key_exists("lastUpdateDate",$raw)? $raw["lastUpdateDate"] : $this->getDateSent();
     }

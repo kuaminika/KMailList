@@ -52,11 +52,16 @@ class KMailFacade
                             "sent_date"=>"n/a"
                             ];
         
+
+        $this->mailoolBox->logTool->showVDump( $this->mailoolBox->purposedEmails);
+       
         $purosedEMailarr= array_merge($purosedEMailarr, $this->mailoolBox->purposedEmails[$finalKey]);
         $purosedEMailarr = array_merge($purosedEMailarr, $this->mailoolBox->purposedEmailSenders[$key]);
 
      
-
+        $this->mailoolBox->logTool->showVDump($purosedEMailarr);
+        $this->mailoolBox->logTool->log(\get_class() .":final purosedEMailarr");
+        
         $result = new StoredMessage($purosedEMailarr);
 
         return $result;
@@ -91,23 +96,24 @@ class KMailFacade
             $toolbox->logTool->log("the following is the message from the form");
             $toolbox->logTool->showVDump($messageFromForm);
 
-            
+            $toolbox->logTool->showVDump($storedMessage);
+            $toolbox->logTool->log("the following is a purposed  message");
 
-            $messageParams = ["sender"=>$contactFormSender->getEmail()
-                            ,"subject"=>$storedMessage->getTitle() // 
+            $messageParams = ["sender"=>$storedMessage->getAuthorEmail()//$contactFormSender->getEmail()
+                            ,"subject"=>$storedMessage->getTitle() 
                             ,"content"=>$storedMessage->getContent()
                             ,"payLoad"=>$cfSubmission->getContent()
                             ,"recipientName"=>$recipient->getName()
                             ,"recipientEmail"=>$recipient->getEmail() 
-                            ,"membershipId"=>$code//$storedSubscriber->getMembershipId()
+                            ,"membershipId"=>$code
                             ,"sourceHost"=> $toolbox->sourceHost
                         ];
 
           
             
             
-          //  $toolbox->logTool->log("the following is the message params");
-          //  $toolbox->logTool->showVDump($messageParams);
+            $toolbox->logTool->log("the following is the message params");
+            $toolbox->logTool->showVDump($messageParams);
 
             
             $message = new ExtendedKMailMessage($messageParams,$template);
@@ -115,6 +121,11 @@ class KMailFacade
             $finalRecipientList =  array_merge( $toolbox->itRecipientList,[ $this->mailoolBox->mainRecipientPublisher]);
             $status = $mailSender->sendEMail($finalRecipientList , $message);
             
+            $toolbox->logTool->showVDump($status);
+            $toolbox->logTool->log("<h1>---------------the staus</h1>");
+
+
+
             $statusIsGood =isset($status->Messages);
             if(!$statusIsGood)
             {
@@ -122,7 +133,7 @@ class KMailFacade
             }
                
             
-            return $status;
+            return 1;// $status;
         }
         catch(\Exception $ex)
         {

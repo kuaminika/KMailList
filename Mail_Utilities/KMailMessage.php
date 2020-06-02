@@ -45,7 +45,7 @@ class KMailMessage implements IKMailMessage
             throw new \Exception($arg." is required.");
         }
 
-        return "";
+        return $itsProvided  ? $this->params[$arg]: "";
     }
 
 

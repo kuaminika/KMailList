@@ -40,9 +40,10 @@ class KMailSender extends KMailTool
 
 
         $response = json_decode($server_output);
-       // $this->logTool->showObj(isset($response->Messages));
     
         $this->logTool->showObj( $response);
+    
+        $this->logTool->showObj(get_class(). ":----------this was the respons:");
         return $response;
     }
 
