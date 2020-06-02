@@ -2,3 +2,17 @@
     width: 6.5rem;
     min-height: 100vh;
 }
+
+#logListHolder .list-group-item
+{
+   width:60%;
+   margin-top:1%;
+   border-top:2px solid #efa4a4;
+}
+
+
+#logListHolder .list-group-item:hover
+{
+    border:2px solid #da6b6b;
+    background:#d4a5a5
+}

@@ -54,13 +54,14 @@ class KMailFacade
         
 
         $this->mailoolBox->logTool->showVDump( $this->mailoolBox->purposedEmails);
-        $this->mailoolBox->logTool->log("these were the purposed");
-        
+       
         $purosedEMailarr= array_merge($purosedEMailarr, $this->mailoolBox->purposedEmails[$finalKey]);
         $purosedEMailarr = array_merge($purosedEMailarr, $this->mailoolBox->purposedEmailSenders[$key]);
 
      
-
+        $this->mailoolBox->logTool->showVDump($purosedEMailarr);
+        $this->mailoolBox->logTool->log(\get_class() .":final purosedEMailarr");
+        
         $result = new StoredMessage($purosedEMailarr);
 
         return $result;
@@ -95,15 +96,16 @@ class KMailFacade
             $toolbox->logTool->log("the following is the message from the form");
             $toolbox->logTool->showVDump($messageFromForm);
 
-            
+            $toolbox->logTool->showVDump($storedMessage);
+            $toolbox->logTool->log("the following is a purposed  message");
 
-            $messageParams = ["sender"=>$contactFormSender->getEmail()
-                            ,"subject"=>$storedMessage->getTitle() // 
+            $messageParams = ["sender"=>$storedMessage->getAuthorEmail()//$contactFormSender->getEmail()
+                            ,"subject"=>$storedMessage->getTitle() 
                             ,"content"=>$storedMessage->getContent()
                             ,"payLoad"=>$cfSubmission->getContent()
                             ,"recipientName"=>$recipient->getName()
                             ,"recipientEmail"=>$recipient->getEmail() 
-                            ,"membershipId"=>$code//$storedSubscriber->getMembershipId()
+                            ,"membershipId"=>$code
                             ,"sourceHost"=> $toolbox->sourceHost
                         ];
 

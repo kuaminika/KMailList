@@ -13,7 +13,7 @@ abstract class AModel{
             {
                 throw new \Exception($arg." is required.");
             }
-            return "";
+            return $itsInThere? $params[$arg]: "";
         }
 
         /**
