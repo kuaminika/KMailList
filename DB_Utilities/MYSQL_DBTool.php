@@ -5,7 +5,7 @@
         use DB_Utilities\IDBTool;
     use Exception;
 
-require_once "IDBTool.php";
+require_once dirname(__FILE__)."/IDBTool.php";
         class MYSQL_DBTool   implements IDBTool      
         {
             private $servername;
