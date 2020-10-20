@@ -18,6 +18,8 @@ class KMailToolBox
     var $tokenFacade;
     var $mainRecipientPublisher;
     var $itRecipientList;
+
+    private $commandListMap;
     function __construct($mailConfigs,$logTool)
     {
        
@@ -33,8 +35,14 @@ class KMailToolBox
         $this->logTool = $logTool;
 
         $this->tokenFacade =  KTokenFacade::create();
-        
+        $this->commandListMap =  $mailConfigSet->getConfig("commandListMap");
         $this->logTool->log("done constructing KMailToolBox");
+    }
+
+    public function GetExtraCommandList($commandListName)
+    {
+        $result = $this->commandListMap[$commandListName];
+        return $result;
     }
 
 }

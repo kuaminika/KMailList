@@ -79,7 +79,8 @@ class SubscriberRepository extends ARepository implements IRepository
         $subscriberId = $storedSubscriber->getSubscriberId();
         try{
 
-
+            $this->logTool->log("just entered SubscriberRepository->addSubscriberToListBySelf");
+        
 
         $insertQuery = sprintf($this->_queryBoard["insertSubscriberToList"],$subscriberId,$listId);
         $this->logTool->log($insertQuery);
@@ -87,10 +88,13 @@ class SubscriberRepository extends ARepository implements IRepository
         $this->dbTool->runQuery($insertQuery);
 
         $query =  $this->_queryBoard["selectSubscribersForList"]." WHERE m.list_id=".$listId." AND u.email = '".$storedSubscriber->getEmail()."'" ;
-    
+        $this->logTool->log($query );
         $dbResultSet =  $this->dbTool->runQuery($query )->fetchAll();
-       $result =  $this->_convertResultSetToStoredTypeList("models\StoredSubscriber",$dbResultSet);
-       return $result;
+        $this->logTool->showVDump($dbResultSet);
+        $result =  $this->_convertResultSetToStoredTypeList("models\StoredSubscriber",$dbResultSet);
+       
+        $this->logTool->log("leaving SubscriberRepository->addSubscriberToListBySelf");
+        return $result;
         }
         catch(Exception $ex)
         {
@@ -115,6 +119,7 @@ class SubscriberRepository extends ARepository implements IRepository
     public function addSubscriberToList($storedSubscriber,$listId)
     {
 
+        $this->logTool->log("just entered SubscriberRepository->addSubscriberToList");
         $subscriberId = $storedSubscriber->getSubscriberId();
         try{
 
@@ -148,22 +153,26 @@ class SubscriberRepository extends ARepository implements IRepository
 
     public function getOrInsert($formedOUtModel)
     {
+        
+        $this->logTool->log("just entered SubscriberRepository->getOrInsert");
         $newIModel = $formedOUtModel;
         $selectQuery =  sprintf($this->_queryBoard["selectSubscriberByEmailQuery"],$newIModel->getEmail());
         $arrUserResult = $this->dbTool->runQuery( $selectQuery)->fetchArray();
         $subscriberExists =  isset($arrUserResult["id"]);
  
-        $this->logTool->log("it exsits:");
-        $this->logTool->log( $subscriberExists);
+        $this->logTool->logWithTab("it exsits:");
+        $this->logTool->logWithTab( $subscriberExists);
 
         if( !$subscriberExists)
         {
             $insertedSubscriber =   $this->insert( $newIModel );
+            $this->logTool->log("leaving SubscriberRepository->getOrInsert");
             return $insertedSubscriber;
         }
 
         $storedSubscriber = new StoredSubscriber($arrUserResult);
 
+        $this->logTool->log("leaving SubscriberRepository->getOrInsert");
         return $storedSubscriber;
     }
 
@@ -171,11 +180,13 @@ class SubscriberRepository extends ARepository implements IRepository
     
     public function subscriberExistsInList(FormedOutSubscriber $subscriberFromForm)
     {
+        $this->logTool->log("just entered SubscriberRepository->subscriberExistsInList");
         $query =  $this->_queryBoard["selectSubscribersForList"] ;
 
         $dbRow =  $this->dbTool->runQuery($query)->fetchArray(); 
 
         $found = new \models\StoredSubscriber($dbRow);
+        $this->logTool->log("leaving SubscriberRepository->subscriberExistsInList");
          return  $found ;
     }
 
