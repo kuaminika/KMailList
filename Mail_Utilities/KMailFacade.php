@@ -7,6 +7,9 @@ require_once dirname(__FILE__)."/KMailSender.php";
 require_once dirname(__FILE__)."/KMailTemplate.php";
 require_once dirname(__FILE__)."/KMailMessage.php";
 require_once dirname(__FILE__)."/ExtendedKMailMessage.php";
+require_once dirname(__FILE__)."/KCommand_Abstract.php";
+require_once dirname(__FILE__)."/KCommand_NotifyJoinMailingListCommand.php";
+
 
 require_once dirname(__DIR__)."/Security_Utilities/Token_Utilities/KTokenFacade.php";
 require_once dirname(__FILE__)."/../Services/MessageService.php";
@@ -110,17 +113,15 @@ class KMailFacade
                         ];
 
           
-            
-            
             $toolbox->logTool->log("the following is the message params");
             $toolbox->logTool->showVDump($messageParams);
 
             
             $message = new ExtendedKMailMessage($messageParams,$template);
+            
 
             $finalRecipientList =  array_merge( $toolbox->itRecipientList,[ $this->mailoolBox->mainRecipientPublisher]);
             $status = $mailSender->sendEMail($finalRecipientList , $message);
-            
             $toolbox->logTool->showVDump($status);
             $toolbox->logTool->log("<h1>---------------the staus</h1>");
 
@@ -173,8 +174,12 @@ class KMailFacade
                             ,"sourceHost"=> $toolbox->sourceHost
                         ];
         
+                        $toolbox->logTool->log("<h1>thanks</h1>");
             $message = new KMailMessage($messageParams,$template);
             $sender->sendEMail([["Email"=>$storedSubscriber->getEmail(),"Name"=> $storedSubscriber->getName()]], $message);
+            // TODO : should not be hardcoding the instanciation of this
+            $whenDoneCommand =new   NotifyJoinMailingListCommand( $toolbox,$message,$sender);
+            $whenDoneCommand->Execute();
         }
         catch(\Exception $ex)
         {
