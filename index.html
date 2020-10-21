@@ -32,26 +32,26 @@
     </header>
     <main class="d-flex ">
         <div id="sideBar" class="avbar-nav bg-gradient-primary">
-           <div class="nav-item active">
-              <div class="nav-link" >
+           <div class="nav-item k-menu active">
+              <div id="DashboardBtn" class="nav-link " >
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span>
               </div>
             </div>
-            <div class="nav-item ">
-               <div class="nav-link" >
+            <div   class="nav-item k-menu ">
+               <div id="LogsBtn" class="nav-link " >
                  <i class=""></i>
                  <span>Logs</span>
                </div>
              </div>
         </div>
         <div id="mainFloor" class="container-fluid d-flex justify-content-start">    
-            <div class="d-none ">
+            <div id="Dashboard" class=" d-none k-component">
               <div id="mailingListHolder" style="  max-height: 400px; overflow-y: auto; "></div>            
               <div id="memberListHolder"  class="d-flex flex-column"></div>
             </div>
           
-            <div id="logListHolder"  class="d-none flex-column list-group"></div>
+            <div id="logListHolder"  class="d-none flex-column  k-component list-group"></div>
         </div>
  
     </main>
