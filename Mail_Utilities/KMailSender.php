@@ -7,9 +7,15 @@ require_once dirname(__FILE__)."/KMailTool.php";
 
 class KMailSender extends KMailTool
 {    
-    
-    function sendEMail($recipientList_array,IKMailMessage $message)//,$content_String,$emailInfo = [])
+
+    function setLogTool($newLogTool)
     {
+
+        $this->logTool = $newLogTool;
+    }
+    
+    function sendEMail($recipientList_array,IKMailMessage $message)
+    {$this->logTool->log("inside sendEMail");
         $sender_Email = $message ->getSender();
         $this->logTool->showObj($recipientList_array);
 
