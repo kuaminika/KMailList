@@ -39,6 +39,13 @@ class KMailToolBox
         $this->logTool->log("done constructing KMailToolBox");
     }
 
+
+    public function createEchoLog()
+    {
+      $newEchoLogFn =   \KConfigSet::getCurrentConfigs()->getConfig("newEchoLogFn");
+
+      return $newEchoLogFn();
+    }
     public function GetExtraCommandList($commandListName)
     {
         $result = $this->commandListMap[$commandListName];
