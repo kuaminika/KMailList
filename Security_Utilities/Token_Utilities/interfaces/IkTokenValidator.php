@@ -6,6 +6,7 @@ interface IkTokenValidator
 {
     public function confirmIfTokenActuallyExists();
     public function validate();
+    public function resolveCode($code);
 }
 
 ?>
