@@ -35,7 +35,10 @@ $mailConfigs =  [
     "outboundEmailForContactForm"=>"contact@heartmindequation.com" ,
     "projectName"=>"Heart mind equation",
     "sourceHost"=>"https://heartmindequation.com",
-    "purposedEmailAuthor"=>["thanksForJoining"=>["author_email"=>"ludemia@heartmindequation.com","author_name" =>"Lude Mia"]],
+    "purposedEmailAuthor"=>["thanksForJoining"=>["author_email"=>"ludemia@heartmindequation.com","author_name" =>"Lude Mia"],
+                            "NoPurpose"=>["author_email"=>"ludemia@heartmindequation.com","author_name" =>"Lude Mia"],
+                            "NewPost"=>["author_email"=>"ludemia@heartmindequation.com","author_name" =>"Lude Mia"]
+                        ],
     "purposedEmailConfigs"=>["thanksForJoining_en"=>[
                                                   "title"=>"Welcome to the equation"
                                                  ,"content"=>'Thank you for joining. You will now be notified as to when new content is generated from <b><a href="https://www.heartmindequation.com"> my site</a></b>'
@@ -43,7 +46,10 @@ $mailConfigs =  [
                             ,"thanksForJoining_fr"=>["title"=>"Bienvenue à l'équation"
                                                     ,"content"=>'Merci de nous joindre. Vous serez désormais informé de la génération de nouveau contenu à partir de <b><a href="https://www.heartmindequation.com"> mon site</a></b>'
                                                    ]
-      
+                            ,"NoPurpose_en" =>["title"=>"no purpose","content"=>"..."]
+                            ,"NoPurpose_fr" =>["title"=>"pas de sujet","content"=>"..."]
+                            ,"NewPost_en" =>["title"=>"no purpose","content"=>"..."]
+                            ,"NewPost_fr" =>["title"=>"pas de sujet","content"=>"..."]
                             ],
     "commandListMap"=> ["whenJoinedMailingList"=>["NotifyJoinMailingListCommand"]]
 ];
