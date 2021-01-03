@@ -16,6 +16,7 @@ require_once dirname(__FILE__)."/../Services/MessageService.php";
 require_once dirname(__FILE__)."/../Models/StoredMessage.php";
 require_once dirname(__FILE__)."/../Models/StoredSubscriber.php";
 
+use Exception;
 use KConfigSet;
 //use models\interfaces\ISubscriber;
 use Security_Utilities\Token_Utilities\KTokenFacade;
@@ -36,7 +37,7 @@ class KMailFacade
 
 
     public static function create()
-    {
+    {//newEchoLogFn
         $configs = KConfigSet::getCurrentConfigs();
         $mailConfigs = $configs->getConfig("mailConfigs");
         $logTool =  $configs->getConfig("currentLogTool");  
@@ -64,13 +65,13 @@ class KMailFacade
      
         $this->mailoolBox->logTool->showVDump($purosedEMailarr);
         $this->mailoolBox->logTool->log(\get_class() .":final purosedEMailarr");
-        
+        //note this model should not be included in here
         $result = new StoredMessage($purosedEMailarr);
 
         return $result;
     }
 
-
+    //todo: need to find a way to make the  ContactFormSubmission model be local to the Mail_Utilities namespace
     public function sendContactFormEmailToRecipient(ContactFormSubmission $cfSubmission)
     {
         try
@@ -164,13 +165,12 @@ class KMailFacade
             $tokenFacade = KTokenFacade::create();
             $code = $tokenFacade->createCode($storedSubscriber);
             
-            //"kuaminika@gmail.com","Message from contact form","this is a test"
-            $messageParams = ["sender"=>$storedMessage->getAuthorEmail()//"kuaminika@gmail.com"
-                            ,"subject"=>$storedMessage->getTitle()//"Welcome to the equattion"
-                            ,"content"=>$storedMessage->getContent()//'Thank you for joining. You will now be notified as to when new content is generated from <b><a href="http://www.heartmindequation.com">our site</a></b>'
+            $messageParams = ["sender"=>$storedMessage->getAuthorEmail()//ex:"kuaminika@gmail.com"
+                            ,"subject"=>$storedMessage->getTitle()//ex:"Welcome to the equattion"
+                            ,"content"=>$storedMessage->getContent()//'ex:Thank you for joining. You will now be notified as to when new content is generated from <b><a href="http://www.heartmindequation.com">our site</a></b>'
                             ,"recipientName"=>$storedSubscriber->getName()
                             ,"recipientEmail"=>$storedSubscriber->getEmail() 
-                            ,"membershipId"=>$code//$storedSubscriber->getMembershipId()
+                            ,"membershipId"=>$code
                             ,"sourceHost"=> $toolbox->sourceHost
                         ];
         
@@ -188,6 +188,79 @@ class KMailFacade
     
     }
 
+    public function sendMessageToAll( $recipients,$subject,$content)
+    {
+
+
+        try{
+           
+               $toolbox = $this->mailoolBox;
+                $purpose = "NewPost";
+               /* $logTool = $toolbox->createEchoLog(); // for debugging purposes
+                $logTool->toggleActivation(0);*/
+                $storedMessage =$this->getPurposedEmail($purpose);
+                $mailSender = new KMailSender($toolbox);
+                $tokenFacade = KTokenFacade::create();
+                $testFormat =  file_get_contents(dirname(__FILE__).'/templateFormats/greetWithHello_en.html');
+                $template = new KMailTemplate($purpose, $testFormat);
+                $receiptMsg = "message was sent to these emails:";
+                $messageParams = ["sender"=>$storedMessage->getAuthorEmail()//"kuaminika@gmail.com"
+                        ,"subject"=>$subject//"Welcome to the equattion"
+                        ,"content"=>$content//'Thank you for joining. You will now be notified as to when new content is generated from <b><a href="http://www.heartmindequation.com">our site</a></b>'
+                        ,"recipientName"=>""
+                        ,"recipientEmail"=>""
+                        ,"membershipId"=>""
+                        ,"sourceHost"=> $toolbox->sourceHost
+                        ];
+           
+                foreach ($recipients as  $recipient) {
+                    try
+                    {
+
+                    
+                        $code = $tokenFacade->createCode($recipient);
+                   
+                        $messageParams["recipientName"] = $recipient->getName();
+                     
+                        $messageParams["recipientEmail"] = $recipient->getEmail();
+                  
+                        $messageParams["membershipId"] = $code;
+
+                   
+                        $message = new KMailMessage($messageParams,$template);
+                       // $mailSender->setLogTool($logTool);
+                        $response =  $mailSender->sendEMail([$recipient->getArrValue()], $message);
+                       
+                        $receiptMsg .= json_encode($recipient->getArrValue()).$recipient->getEmail()."-".$recipient->getName()."\n<br>";
+                        $receiptMsg .= json_encode($response)."\n</br>";
+                    }
+                    catch(\Exception $ex)
+                    {
+                        $toolbox->logTool->log($ex->getMessage());
+                        throw $ex;
+                    }
+                    
+                }
+                
+                $messageParams["recipientName"] = "To whom it may concern";
+                $messageParams["recipientEmail"] = "--";
+                $messageParams["content"] = $receiptMsg;
+                $messageParams["membershipId"] = $code;
+                $message = new KMailMessage($messageParams,$template);
+             
+                       // TODO : should not be hardcoding the instanciation of this
+                       $whenDoneCommand =new   NotifyJoinMailingListCommand( $toolbox,$message,$mailSender);
+                       $whenDoneCommand->Execute();
+                
+        }
+        catch(\Exception $ex)
+        {
+            throw $ex;
+        }
+    
+        
+
+    }
 
 }
 

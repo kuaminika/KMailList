@@ -11,6 +11,7 @@ require_once "ILogTool.php";
     private $name;
     private $dbTool;
     private $logTableName;
+    private $isActive;
 
     public function __construct($params)
     {
@@ -21,25 +22,30 @@ require_once "ILogTool.php";
         $this->dbTool = $params["dbTool"] ;
         $this->logTableName = $params["logTableName"] ;
 
-
+        $this->isActive = true;
         $this->writeInDB( "log tool:".$this->name."-created"); 
 
     }
 
+    
+    public function toggleActivation($isActive)
+    {
+        $this->isActive = $isActive;
+    }
     public function getLogTableName()
     {
         return $this->logTableName;
     }
 
     public function logWithTab($str)
-    {
+    {    if(!$this->isActive) return;
         $this->writeInDB(  "--->"."-".$this->name.":". $str); 
     }
 
 
 
       private function writeInDB($str)
-      {
+      {    
         $str = str_replace("'", "\'", $str);
       
         $cmd = "INSERT INTO `".$this->logTableName."` (`id`, `LOG_CONTENT`, `LOG_DATE`) VALUES (NULL, '".$str."', CURRENT_TIMESTAMP);";
@@ -57,12 +63,12 @@ require_once "ILogTool.php";
 
 
     public function log($str)
-    {
+    {    if(!$this->isActive) return;
         $this->writeInDB(   "-".$this->name.":". $str); 
     }
 
     public function showObj($obj)
-    {   
+    {       if(!$this->isActive) return;
         $str = json_encode($obj);
 
         $this->writeInDB(   "-".$this->name.":". $str);   
@@ -70,7 +76,7 @@ require_once "ILogTool.php";
     }
 
     public function showVDump($obj)
-    {
+    {    if(!$this->isActive) return;
         ob_start();
         var_dump($obj);
         $result = ob_get_clean();

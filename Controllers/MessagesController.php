@@ -4,10 +4,10 @@ namespace Controllers;
 
 require_once dirname(__FILE__)."/AController.php";
 require_once dirname(__FILE__)."/ControllerToolBox.php";
+require_once dirname(__DIR__)."/Mail_Utilities/KRecipient.php";
 require_once dirname(__FILE__)."/../Models/ContactFormSubmission.php";
 
 use models\ContactFormSubmission;
-use Mail_utilities\ExtendedKMailMessage;
 class MessagesController extends AController
 {
 
@@ -41,9 +41,62 @@ class MessagesController extends AController
         catch(\Exception $ex)
         {
             $this->logTool->log("exception is caught");
-          $this->logAndSend("exception","addSubscriberToList",$ex->getMessage());
+          $this->logAndSend("exception","showWhatISent",$ex->getMessage());
         }
     }
+
+
+    public function sendMessageToAll($messageAndContacts)
+    {
+        try
+        {
+            $logs = [];
+            
+            $itComesFromJSONForm = isset($messageAndContacts["jsonValue"]);
+            $logs [] =  ["itComesFromJSONForm" => $itComesFromJSONForm] ;
+            $messageAndContacts = $itComesFromJSONForm ?(array) $messageAndContacts["jsonValue"]: $messageAndContacts ;
+          
+            $messageAndContacts = json_decode(json_encode($messageAndContacts), true);
+            
+
+      
+           
+            $recipients = [];
+
+
+                $kMailFacade = \Mail_utilities\KMailFacade::create();   
+
+               
+                $rawRecipients = $messageAndContacts["recipients"];
+                $content =  $messageAndContacts["content"];
+                $subject = $messageAndContacts["subject"];
+                $recipients = [];
+                $recipientslog = [];
+                $logs [] =  ["subject" => $subject] ;
+                $logs [] =  ["content" => $content] ;
+                $logs [] =  ["rawRecipients" => $rawRecipients] ;
+                foreach ($rawRecipients as $rawRecipient)
+                {
+                    $newRecipient =  new \Mail_utilities\KRecipient($rawRecipient);
+                 $recipients [] = $newRecipient;
+                 $recipientslog [] = $newRecipient->getArrValue();
+                }
+
+                $logs [] =  ["recipients" => $recipientslog] ;
+
+           //     $kMailFacade->sendMessageToAll($recipients,$subject,$content);
+                
+            $this->response['body'] = json_encode($logs);
+          
+        }
+        catch(\Exception $ex)
+        {
+            $this->logTool->log("exception is caught");
+             $this->logAndSend("exception","addSubscriberToList",$ex->getMessage());
+        }
+    
+    }
+
 
     public function processContactFormSubmission($contactFormSubmissionArgs)
     {
@@ -69,7 +122,7 @@ class MessagesController extends AController
             
             $kMailFacade = \Mail_utilities\KMailFacade::create();        
           
-            
+            // todo: perhaps kmail facade shouls not receive a model of ContactFormSubmission since it is not in the same namepsace. perhaps an adapter would have been better. 
            $kMailFacade->sendContactFormEmailToRecipient($formSubmission);
             
             $this->logTool->log("formSubmission->_toJson():");
